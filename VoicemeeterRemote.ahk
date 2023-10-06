@@ -46,9 +46,7 @@ class VoicemeeterRemote {
 			; Set parameters
 			this.SetParameterFloat := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_SetParameterFloat", "Ptr")
 			this.SetParameterString := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_SetParameterString" . strType, "Ptr")
-			this.SetParameters := A_IsUnicode
-				? DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_SetParametersW", "Ptr")
-				: DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_SetParameters", "Ptr")
+			this.SetParameters := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", A_IsUnicode ? "VBVMR_SetParametersW" : "VBVMR_SetParameters", "Ptr")
 
 			; Devices enumerator
 			; this.Output_GetDeviceNumber := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Output_GetDeviceNumber", "Ptr")
