@@ -17,7 +17,7 @@ class VoicemeeterRemote {
 		static ASIO := 5
 	}
 
-	class VMRInterface {
+	class VoicemeeterRemoteInterface {
 		__New(dllPath) {
 			; Load the VoicemeeterRemote library.
 			this._hModule := DllCall("LoadLibrary", "Str", dllPath, "Ptr")
@@ -76,7 +76,7 @@ class VoicemeeterRemote {
 		dllPath := vmFolder . "\" . dllName
 
 		; Build an interface of function pointers.
-		this._vmr := new VoicemeeterRemote.VMRInterface(dllPath)
+		this._vmr := new VoicemeeterRemote.VoicemeeterRemoteInterface(dllPath)
 
 		this._Login()
 	}
