@@ -1,7 +1,7 @@
 ﻿; Create a window group to ensure any version of Voicemeeter can be detected.
-GroupAdd Voicemeeter, ahk_exe voicemeeter.exe
-GroupAdd Voicemeeter, ahk_exe voicemeeterpro.exe
-GroupAdd Voicemeeter, ahk_exe voicemeeter8.exe
+GroupAdd "Voicemeeter", "ahk_exe voicemeeter.exe"
+GroupAdd "Voicemeeter", "ahk_exe voicemeeterpro.exe"
+GroupAdd "Voicemeeter", "ahk_exe voicemeeter8.exe"
 
 class VoicemeeterRemote {
 	class VoicemeeterType {
@@ -74,7 +74,7 @@ class VoicemeeterRemote {
 		dllPath := vmFolder . "\" . dllName
 
 		; Build an interface of function pointers.
-		this._vmr := new VoicemeeterRemote.VoicemeeterRemoteInterface(dllPath)
+		this._vmr := VoicemeeterRemote.VoicemeeterRemoteInterface(dllPath)
 
 		this._Login()
 	}
@@ -93,14 +93,14 @@ class VoicemeeterRemote {
 				; Force system to read from 32-bit registry.
 				SetRegView 32
 				; Get Voicemeeter install folder by reading the uninstall program path from the registry.
-				RegRead uninstallPath, % "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\VB:Voicemeeter {17359A74-1236-5467}", UninstallString
+				uninstallPath := RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\VB:Voicemeeter {17359A74-1236-5467}", "UninstallString")
 			} finally {
 				; Restore previous RegView setting.
-				SetRegView %regView%
+				SetRegView regView
 			}
 		} catch {
 			; RegRead throws an exception on a nonexistent key or value, so we assume Voicemeeter is not installed.
-			throw Exception("Voicemeeter is not installed")
+			throw Error("Voicemeeter is not installed")
 		}
 		SplitPath uninstallPath,, installDir
 		return installDir
@@ -122,12 +122,12 @@ class VoicemeeterRemote {
 					or this.vmType == VoicemeeterRemote.VoicemeeterType.VoicemeeterPotato) {
 					DllCall(this._vmr.RunVoicemeeter, "Int", this.vmType)
 				} else {
-					throw Exception("Successfully logged into Voicemeeter Remote, but Voicemeeter is not running.")
+					throw Error("Successfully logged into Voicemeeter Remote, but Voicemeeter is not running.")
 				}
 
 			; Cannot get client (unexpected)
 			case -1:
-				throw Exception("Unexpected error while calling VBVMR_Login: Cannot get client")
+				throw Error("Unexpected error while calling VBVMR_Login: Cannot get client")
 
 			; Unexpected login (logout was expected before)
 			case -2:
@@ -135,14 +135,14 @@ class VoicemeeterRemote {
 				this._Login()
 
 			default:
-				throw Exception("Unexpected error while calling VBVMR_Login")
+				throw Error("Unexpected error while calling VBVMR_Login")
 		}
 	}
 
 	_Logout() {
 		result := DllCall(this._vmr.Logout)
 		if (result != 0) {
-			throw Exception("Unexpected error while calling VBVMR_Logout")
+			throw Error("Unexpected error while calling VBVMR_Logout")
 		}
 	}
 
@@ -212,18 +212,20 @@ class VoicemeeterRemote {
 	; Misc. functions
 
 	BuildParamString(values*) {
-		for index, value in values
+		str := ""
+		for index, value in values {
 			str .= value . ";"
+		}
 		return SubStr(str, 1, -1)
 	}
 
 	ShowVoicemeeterWindow() {
-		WinShow % VoicemeeterRemote.WindowClass
-		WinActivate % VoicemeeterRemote.WindowClass
+		WinShow VoicemeeterRemote.WindowClass
+		WinActivate VoicemeeterRemote.WindowClass
 	}
 
 	HideVoicemeeterWindow() {
-		WinHide % VoicemeeterRemote.WindowClass
+		WinHide VoicemeeterRemote.WindowClass
 	}
 
 	ToggleVoicemeeterWindow() {
