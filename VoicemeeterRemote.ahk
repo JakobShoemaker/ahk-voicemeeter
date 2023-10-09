@@ -20,36 +20,38 @@ class VoicemeeterRemote {
 	class VoicemeeterRemoteInterface {
 		__New(dllPath) {
 			; Load the VoicemeeterRemote library.
-			this._hModule := DllCall("LoadLibrary", "Str", dllPath, "Ptr")
+			this._hModule := hModule := DllCall("LoadLibrary", "Str", dllPath, "Ptr")
+
+			GetProcAddress := (procName) => DllCall("GetProcAddress", "Ptr", hModule, "AStr", procName, "Ptr")
 
 			; Login
-			this.Login := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Login", "Ptr")
-			this.Logout := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Logout", "Ptr")
-			this.RunVoicemeeter := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_RunVoicemeeter", "Ptr")
+			this.Login := GetProcAddress("VBVMR_Login")
+			this.Logout := GetProcAddress("VBVMR_Logout")
+			this.RunVoicemeeter := GetProcAddress("VBVMR_RunVoicemeeter")
 
 			; General information
-			this.GetVoicemeeterType := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_GetVoicemeeterType", "Ptr")
-			this.GetVoicemeeterVersion := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_GetVoicemeeterVersion", "Ptr")
+			this.GetVoicemeeterType := GetProcAddress("VBVMR_GetVoicemeeterType")
+			this.GetVoicemeeterVersion := GetProcAddress("VBVMR_GetVoicemeeterVersion")
 
 			; Get parameters
-			this.IsParametersDirty := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_IsParametersDirty", "Ptr")
-			this.GetParameterFloat := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_GetParameterFloat", "Ptr")
-			this.GetParameterString := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_GetParameterStringW", "Ptr")
+			this.IsParametersDirty := GetProcAddress("VBVMR_IsParametersDirty")
+			this.GetParameterFloat := GetProcAddress("VBVMR_GetParameterFloat")
+			this.GetParameterString := GetProcAddress("VBVMR_GetParameterStringW")
 
 			; Get levels
-			; this.GetLevel := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_GetLevel", "Ptr")
-			; this.GetMidiMessage := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_GetMidiMessage", "Ptr")
+			; this.GetLevel := GetProcAddress("VBVMR_GetLevel")
+			; this.GetMidiMessage := GetProcAddress("VBVMR_GetMidiMessage")
 
 			; Set parameters
-			this.SetParameterFloat := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_SetParameterFloat", "Ptr")
-			this.SetParameterString := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_SetParameterStringW", "Ptr")
-			this.SetParameters := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_SetParametersW", "Ptr")
+			this.SetParameterFloat := GetProcAddress("VBVMR_SetParameterFloat")
+			this.SetParameterString := GetProcAddress("VBVMR_SetParameterStringW")
+			this.SetParameters := GetProcAddress("VBVMR_SetParametersW")
 
 			; Devices enumerator
-			; this.Output_GetDeviceNumber := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Output_GetDeviceNumber", "Ptr")
-			; this.Output_GetDeviceDesc := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Output_GetDeviceDescW", "Ptr")
-			; this.Input_GetDeviceNumber := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Input_GetDeviceNumber", "Ptr")
-			; this.Input_GetDeviceDesc := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Input_GetDeviceDescW", "Ptr")
+			; this.Output_GetDeviceNumber := GetProcAddress("VBVMR_Output_GetDeviceNumber")
+			; this.Output_GetDeviceDesc := GetProcAddress("VBVMR_Output_GetDeviceDescW")
+			; this.Input_GetDeviceNumber := GetProcAddress("VBVMR_Input_GetDeviceNumber")
+			; this.Input_GetDeviceDesc := GetProcAddress("VBVMR_Input_GetDeviceDescW")
 		}
 
 		__Delete() {
