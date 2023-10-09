@@ -20,9 +20,9 @@ class VoicemeeterRemote {
 	class VoicemeeterRemoteInterface {
 		__New(dllPath) {
 			; Load the VoicemeeterRemote library.
-			this._hModule := hModule := DllCall("LoadLibrary", "Str", dllPath, "Ptr")
+			this._hModule := DllCall("LoadLibrary", "Str", dllPath, "Ptr")
 
-			GetProcAddress := (procName) => DllCall("GetProcAddress", "Ptr", hModule, "AStr", procName, "Ptr")
+			GetProcAddress := (procName) => DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", procName, "Ptr")
 
 			; Login
 			this.Login := GetProcAddress("VBVMR_Login")
