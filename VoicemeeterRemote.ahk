@@ -80,26 +80,25 @@ class VoicemeeterRemote {
 	}
 
 	_GetVoicemeeterInstallDir() {
-		uninstallPath := ""
-		try {
-			; Save the current RegView setting to be restored later.
-			regView := A_RegView
-			; Nested try/finally block to ensure RegView is restored before exceptions are thrown.
-			try {
-				; Force system to read from 32-bit registry.
-				SetRegView 32
-				; Get Voicemeeter install folder by reading the uninstall program path from the registry.
-				uninstallPath := RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\VB:Voicemeeter {17359A74-1236-5467}", "UninstallString")
-			} finally {
-				; Restore previous RegView setting.
-				SetRegView regView
-			}
-		} catch {
-			; RegRead throws an exception on a nonexistent key or value, so we assume Voicemeeter is not installed.
+		; Cache the current RegView setting to be restored after reading the registry.
+		regView := A_RegView
+
+		; Force system to read from 32-bit registry.
+		SetRegView 32
+
+		; Get Voicemeeter install folder by reading the uninstall program path from the registry.
+		uninstallString := RegRead("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\VB:Voicemeeter {17359A74-1236-5467}", "UninstallString", "")
+
+		; Restore previous RegView setting.
+		SetRegView regView
+
+		if (uninstallString) {
+			SplitPath uninstallString, , &installDir
+			return installDir
+		} else {
+			; We were unable to get UninstallString from registry, so assume Voicemeeter is not installed.
 			throw Error("Voicemeeter is not installed")
 		}
-		SplitPath uninstallPath,, installDir
-		return installDir
 	}
 
 	; Login
