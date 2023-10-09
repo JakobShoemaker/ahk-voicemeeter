@@ -60,7 +60,7 @@ class VoicemeeterRemote {
 		}
 	}
 
-	static WindowClass := "ahk_class VBCABLE0Voicemeeter0MainWindow0"
+	static WindowClass => "ahk_class VBCABLE0Voicemeeter0MainWindow0"
 
 	__New(vmType := 0) {
 		this.vmType := vmType
