@@ -22,9 +22,6 @@ class VoicemeeterRemote {
 			; Load the VoicemeeterRemote library.
 			this._hModule := DllCall("LoadLibrary", "Str", dllPath, "Ptr")
 
-			; Get the correct string type to append to certain function names.
-			strType := A_IsUnicode ? "W" : "A"
-
 			; Login
 			this.Login := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Login", "Ptr")
 			this.Logout := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Logout", "Ptr")
@@ -37,7 +34,7 @@ class VoicemeeterRemote {
 			; Get parameters
 			this.IsParametersDirty := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_IsParametersDirty", "Ptr")
 			this.GetParameterFloat := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_GetParameterFloat", "Ptr")
-			this.GetParameterString := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_GetParameterString" . strType, "Ptr")
+			this.GetParameterString := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_GetParameterStringW", "Ptr")
 
 			; Get levels
 			; this.GetLevel := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_GetLevel", "Ptr")
@@ -45,14 +42,14 @@ class VoicemeeterRemote {
 
 			; Set parameters
 			this.SetParameterFloat := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_SetParameterFloat", "Ptr")
-			this.SetParameterString := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_SetParameterString" . strType, "Ptr")
-			this.SetParameters := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", A_IsUnicode ? "VBVMR_SetParametersW" : "VBVMR_SetParameters", "Ptr")
+			this.SetParameterString := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_SetParameterStringW", "Ptr")
+			this.SetParameters := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_SetParametersW", "Ptr")
 
 			; Devices enumerator
 			; this.Output_GetDeviceNumber := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Output_GetDeviceNumber", "Ptr")
-			; this.Output_GetDeviceDesc := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Output_GetDeviceDesc" . strType, "Ptr")
+			; this.Output_GetDeviceDesc := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Output_GetDeviceDescW", "Ptr")
 			; this.Input_GetDeviceNumber := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Input_GetDeviceNumber", "Ptr")
-			; this.Input_GetDeviceDesc := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Input_GetDeviceDesc" . strType, "Ptr")
+			; this.Input_GetDeviceDesc := DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", "VBVMR_Input_GetDeviceDescW", "Ptr")
 		}
 
 		__Delete() {
@@ -60,9 +57,6 @@ class VoicemeeterRemote {
 			DllCall("FreeLibrary", "Ptr", this._hModule)
 		}
 	}
-
-	; Character size in bytes for string allocation.
-	static CharWidth := A_IsUnicode ? 2 : 1
 
 	static WindowClass := "ahk_class VBCABLE0Voicemeeter0MainWindow0"
 
@@ -179,10 +173,10 @@ class VoicemeeterRemote {
 	}
 
 	GetParameterString(paramName) {
-		value := Buffer(512 * VoicemeeterRemote.CharWidth)
+		value := Buffer(1024)
 		switch DllCall(this._vmr.GetParameterString, "AStr", paramName, "Ptr", &value) {
 			case 0:
-				return StrGet(value, A_IsUnicode ? "UTF-16" : "CP0")
+				return StrGet(value, "UTF-16")
 		}
 	}
 
