@@ -149,18 +149,18 @@ class VoicemeeterRemote {
 	; General Information
 
 	GetVoicemeeterType() {
-		NumPut(0, value, 0, "Int")
+		value := Buffer(4)
 		switch DllCall(this._vmr.GetVoicemeeterType, "Ptr", &value) {
 			case 0:
-				return NumGet(value, 0, "Int")
+				return NumGet(value, "Int")
 		}
 	}
 
 	GetVoicemeeterVersion() {
-		NumPut(0, value, 0, "Int")
+		value := Buffer(4)
 		switch DllCall(this._vmr.GetVoicemeeterVersion, "Ptr", &value) {
 			case 0:
-				return NumGet(value, 0, "Int")
+				return NumGet(value, "Int")
 		}
 	}
 
@@ -171,18 +171,18 @@ class VoicemeeterRemote {
 	}
 
 	GetParameterFloat(paramName) {
-		NumPut(0.0, value, 0, "Float")
+		value := Buffer(4)
 		switch DllCall(this._vmr.GetParameterFloat, "AStr", paramName, "Ptr", &value) {
 			case 0:
-				return NumGet(value, 0, "Float")
+				return NumGet(value, "Float")
 		}
 	}
 
 	GetParameterString(paramName) {
-		VarSetCapacity(value, 512 * VoicemeeterRemote.CharWidth)
+		value := Buffer(512 * VoicemeeterRemote.CharWidth)
 		switch DllCall(this._vmr.GetParameterString, "AStr", paramName, "Ptr", &value) {
 			case 0:
-				return VarSetCapacity(value, -1)
+				return StrGet(value, A_IsUnicode ? "UTF-16" : "CP0")
 		}
 	}
 
