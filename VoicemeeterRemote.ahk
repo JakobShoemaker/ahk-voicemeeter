@@ -109,8 +109,12 @@
 
 	static WindowClass => "ahk_class VBCABLE0Voicemeeter0MainWindow0"
 
-	__New(vmType := 0) {
-		this.vmType := vmType
+	_vmType := 0
+
+	__New(vmType?) {
+		if (IsSet(vmType)) {
+			this.SetVoicemeeterType(vmType)
+		}
 
 		vmFolder := this._GetVoicemeeterInstallDir()
 		dllName := A_Is64bitOS ? "VoicemeeterRemote64.dll" : "VoicemeeterRemote.dll"
@@ -159,10 +163,10 @@
 
 			; OK but Voicemeeter application not launched
 			case 1:
-				if (this.vmType == VoicemeeterRemote.VoicemeeterType.Voicemeeter
-					or this.vmType == VoicemeeterRemote.VoicemeeterType.VoicemeeterBanana
-					or this.vmType == VoicemeeterRemote.VoicemeeterType.VoicemeeterPotato) {
-					DllCall(this._vmr.RunVoicemeeter, "Int", this.vmType)
+				if (this._vmType == VoicemeeterRemote.VoicemeeterType.Voicemeeter
+					or this._vmType == VoicemeeterRemote.VoicemeeterType.VoicemeeterBanana
+					or this._vmType == VoicemeeterRemote.VoicemeeterType.VoicemeeterPotato) {
+					DllCall(this._vmr.RunVoicemeeter, "Int", this._vmType)
 				} else {
 					throw Error("Successfully logged into Voicemeeter Remote, but Voicemeeter is not running.")
 				}
@@ -252,6 +256,16 @@
 	}
 
 	; Misc. functions
+
+	SetVoicemeeterType(vmType) {
+		if (!(vmType is Integer)) {
+			throw TypeError("Expected value type Integer, but received " . Type(vmType) . ".", this.SetVoicemeeterType.Name, vmType)
+		} else if (!VoicemeeterRemote.VoicemeeterType.IsDefined(vmType)) {
+			throw ValueError("Value must be a defined property in VoicemeeterRemote.VoicemeeterType.", this.SetVoicemeeterType.Name, vmType)
+		}
+
+		this._vmType := vmType
+	}
 
 	BuildParamString(values*) {
 		str := ""
