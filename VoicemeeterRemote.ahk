@@ -1,9 +1,4 @@
-﻿; Create a window group to ensure any version of Voicemeeter can be detected.
-GroupAdd "Voicemeeter", "ahk_exe voicemeeter.exe"
-GroupAdd "Voicemeeter", "ahk_exe voicemeeterpro.exe"
-GroupAdd "Voicemeeter", "ahk_exe voicemeeter8.exe"
-
-class VoicemeeterRemote {
+﻿class VoicemeeterRemote {
 	class VoicemeeterEnum {
 		/**
 		 * Returns an Integer indicating whether a given integral value, or its name as a String, exists in the enumeration.
