@@ -163,9 +163,7 @@
 
 			; OK but Voicemeeter application not launched
 			case 1:
-				if (this._vmType == VoicemeeterRemote.VoicemeeterType.Voicemeeter
-					or this._vmType == VoicemeeterRemote.VoicemeeterType.VoicemeeterBanana
-					or this._vmType == VoicemeeterRemote.VoicemeeterType.VoicemeeterPotato) {
+				if (VoicemeeterRemote.VoicemeeterType.IsDefined(this._vmType)) {
 					DllCall(this._vmr.RunVoicemeeter, "Int", this._vmType)
 				} else {
 					throw Error("Successfully logged into Voicemeeter Remote, but Voicemeeter is not running.")
