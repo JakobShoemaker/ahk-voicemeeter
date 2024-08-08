@@ -1,20 +1,20 @@
-﻿; Create a window group to ensure any version of Voicemeeter can be detected.
+; Create a window group to ensure any version of Voicemeeter can be detected.
 GroupAdd "Voicemeeter", "ahk_exe voicemeeter.exe"
 GroupAdd "Voicemeeter", "ahk_exe voicemeeterpro.exe"
 GroupAdd "Voicemeeter", "ahk_exe voicemeeter8.exe"
 
 class VoicemeeterRemote {
 	class VoicemeeterType {
-		static Voicemeeter := 1
-		static VoicemeeterBanana := 2
-		static VoicemeeterPotato := 3
+		static Voicemeeter => 1
+		static VoicemeeterBanana => 2
+		static VoicemeeterPotato => 3
 	}
 
 	class DeviceType {
-		static MME := 1
-		static WDM := 3
-		static KS := 4
-		static ASIO := 5
+		static MME => 1
+		static WDM => 3
+		static KS => 4
+		static ASIO => 5
 	}
 
 	class VoicemeeterRemoteInterface {
