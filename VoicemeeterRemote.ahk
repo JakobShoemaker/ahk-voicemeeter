@@ -1,16 +1,68 @@
-; Create a window group to ensure any version of Voicemeeter can be detected.
+﻿; Create a window group to ensure any version of Voicemeeter can be detected.
 GroupAdd "Voicemeeter", "ahk_exe voicemeeter.exe"
 GroupAdd "Voicemeeter", "ahk_exe voicemeeterpro.exe"
 GroupAdd "Voicemeeter", "ahk_exe voicemeeter8.exe"
 
 class VoicemeeterRemote {
-	class VoicemeeterType {
+	class VoicemeeterEnum {
+		/**
+		 * Returns an Integer indicating whether a given integral value, or its name as a String, exists in the enumeration.
+		 * @param {Integer | String} value
+		 * @returns {Integer} This function returns 1 (true) if `value` is defined in the enumeration, otherwise 0 (false).
+		 */
+		static IsDefined(value) {
+			if (value is Integer) {
+				for enumValue in this {
+					if (value == enumValue) {
+						return true
+					}
+				}
+				return false
+			}
+
+			if (value is String) {
+				for name, _ in this {
+					if (value == name) {
+						return true
+					}
+				}
+				return false
+			}
+
+			return false
+		}
+
+		static __Enum(numberOfVars) {
+			OwnProps := ObjOwnProps(this)
+
+			EnumerateOwnProps(&value, &name?) {
+				while (OwnProps(&name, &value)) {
+					if (value is Integer) {
+						return true
+					}
+				}
+				return false
+			}
+
+			EnumerateValues(&value) {
+				return EnumerateOwnProps(&value)
+			}
+
+			EnumerateNameValuePairs(&name, &value) {
+				return EnumerateOwnProps(&value, &name)
+			}
+
+			return numberOfVars == 1 ? EnumerateValues : EnumerateNameValuePairs
+		}
+	}
+
+	class VoicemeeterType extends VoicemeeterRemote.VoicemeeterEnum {
 		static Voicemeeter => 1
 		static VoicemeeterBanana => 2
 		static VoicemeeterPotato => 3
 	}
 
-	class DeviceType {
+	class DeviceType extends VoicemeeterRemote.VoicemeeterEnum {
 		static MME => 1
 		static WDM => 3
 		static KS => 4
