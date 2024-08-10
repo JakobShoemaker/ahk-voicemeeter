@@ -194,7 +194,7 @@
 
 	GetVoicemeeterType() {
 		value := Buffer(4)
-		switch DllCall(this._vmr.GetVoicemeeterType, "Ptr", &value) {
+		switch DllCall(this._vmr.GetVoicemeeterType, "Ptr", value) {
 			case 0:
 				return NumGet(value, "Int")
 		}
@@ -202,7 +202,7 @@
 
 	GetVoicemeeterVersion() {
 		value := Buffer(4)
-		switch DllCall(this._vmr.GetVoicemeeterVersion, "Ptr", &value) {
+		switch DllCall(this._vmr.GetVoicemeeterVersion, "Ptr", value) {
 			case 0:
 				return NumGet(value, "Int")
 		}
@@ -216,7 +216,7 @@
 
 	GetParameterFloat(paramName) {
 		value := Buffer(4)
-		switch DllCall(this._vmr.GetParameterFloat, "AStr", paramName, "Ptr", &value) {
+		switch DllCall(this._vmr.GetParameterFloat, "AStr", paramName, "Ptr", value) {
 			case 0:
 				return NumGet(value, "Float")
 		}
@@ -224,7 +224,7 @@
 
 	GetParameterString(paramName) {
 		value := Buffer(1024)
-		switch DllCall(this._vmr.GetParameterString, "AStr", paramName, "Ptr", &value) {
+		switch DllCall(this._vmr.GetParameterString, "AStr", paramName, "Ptr", value) {
 			case 0:
 				return StrGet(value, "UTF-16")
 		}
