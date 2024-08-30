@@ -147,20 +147,16 @@
 		_Login() {
 			result := DllCall(this._vmr.Login)
 			switch result {
-				; OK
-				case 0:
+				case 0: ; OK
 					return
 
-					; OK but Voicemeeter application not launched
-				case 1:
+				case 1: ; OK but Voicemeeter application not launched
 					return
 
-					; Cannot get client (unexpected)
-				case -1:
+				case -1: ; Cannot get client (unexpected)
 					throw Error("Unexpected error while calling VBVMR_Login: Cannot get client")
 
-					; Unexpected login (logout was expected before)
-				case -2:
+				case -2: ; Unexpected login (logout was expected before)
 					this._Logout()
 					this._Login()
 
