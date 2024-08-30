@@ -110,13 +110,7 @@
 	static WindowClass => "ahk_class VBCABLE0Voicemeeter0MainWindow0"
 
 	class VoicemeeterRemote {
-		_vmType := 0
-
-		__New(vmType?) {
-			if (IsSet(vmType)) {
-				this.SetVoicemeeterType(vmType)
-			}
-
+		__New() {
 			vmFolder := this._GetVoicemeeterInstallDir()
 			dllName := A_Is64bitOS ? "VoicemeeterRemote64.dll" : "VoicemeeterRemote.dll"
 			dllPath := vmFolder . "\" . dllName
@@ -164,11 +158,7 @@
 
 					; OK but Voicemeeter application not launched
 				case 1:
-					if (Voicemeeter.VoicemeeterType.IsDefined(this._vmType)) {
-						DllCall(this._vmr.RunVoicemeeter, "Int", this._vmType)
-					} else {
-						throw Error("Successfully logged into Voicemeeter Remote, but Voicemeeter is not running.")
-					}
+					return
 
 					; Cannot get client (unexpected)
 				case -1:
@@ -255,16 +245,6 @@
 		}
 
 		; Misc. functions
-
-		SetVoicemeeterType(vmType) {
-			if (!(vmType is Integer)) {
-				throw TypeError("Expected value type Integer, but received " . Type(vmType) . ".", this.SetVoicemeeterType.Name, vmType)
-			} else if (!Voicemeeter.VoicemeeterType.IsDefined(vmType)) {
-				throw ValueError("Value must be a defined property in Voicemeeter.VoicemeeterType.", this.SetVoicemeeterType.Name, vmType)
-			}
-
-			this._vmType := vmType
-		}
 
 		BuildParamString(values*) {
 			str := ""
