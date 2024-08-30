@@ -138,13 +138,8 @@
 			; Restore previous RegView setting.
 			SetRegView regView
 
-			if (uninstallString) {
-				SplitPath uninstallString, , &installDir
-				return installDir
-			} else {
-				; We were unable to get UninstallString from registry, so assume Voicemeeter is not installed.
-				throw Error("Voicemeeter is not installed")
-			}
+			SplitPath uninstallString, , &installDir
+			return installDir
 		}
 
 		; Login
