@@ -1,4 +1,4 @@
-﻿class VoicemeeterRemote {
+﻿class Voicemeeter {
 	class VoicemeeterEnum {
 		/**
 		 * Returns an Integer indicating whether a given integral value, or its name as a String, exists in the enumeration.
@@ -51,13 +51,13 @@
 		}
 	}
 
-	class VoicemeeterType extends VoicemeeterRemote.VoicemeeterEnum {
+	class VoicemeeterType extends Voicemeeter.VoicemeeterEnum {
 		static Voicemeeter => 1
 		static VoicemeeterBanana => 2
 		static VoicemeeterPotato => 3
 	}
 
-	class DeviceType extends VoicemeeterRemote.VoicemeeterEnum {
+	class DeviceType extends Voicemeeter.VoicemeeterEnum {
 		static MME => 1
 		static WDM => 3
 		static KS => 4
@@ -109,184 +109,186 @@
 
 	static WindowClass => "ahk_class VBCABLE0Voicemeeter0MainWindow0"
 
-	_vmType := 0
+	class VoicemeeterRemote {
+		_vmType := 0
 
-	__New(vmType?) {
-		if (IsSet(vmType)) {
-			this.SetVoicemeeterType(vmType)
+		__New(vmType?) {
+			if (IsSet(vmType)) {
+				this.SetVoicemeeterType(vmType)
+			}
+
+			vmFolder := this._GetVoicemeeterInstallDir()
+			dllName := A_Is64bitOS ? "VoicemeeterRemote64.dll" : "VoicemeeterRemote.dll"
+			dllPath := vmFolder . "\" . dllName
+
+			; Build an interface of function pointers.
+			this._vmr := Voicemeeter.VoicemeeterRemoteInterface(dllPath)
+
+			this._Login()
 		}
 
-		vmFolder := this._GetVoicemeeterInstallDir()
-		dllName := A_Is64bitOS ? "VoicemeeterRemote64.dll" : "VoicemeeterRemote.dll"
-		dllPath := vmFolder . "\" . dllName
-
-		; Build an interface of function pointers.
-		this._vmr := VoicemeeterRemote.VoicemeeterRemoteInterface(dllPath)
-
-		this._Login()
-	}
-
-	__Delete() {
-		this._Logout()
-	}
-
-	_GetVoicemeeterInstallDir() {
-		; Cache the current RegView setting to be restored after reading the registry.
-		regView := A_RegView
-
-		; Force system to read from 32-bit registry.
-		SetRegView 32
-
-		; Get Voicemeeter install folder by reading the uninstall program path from the registry.
-		uninstallString := RegRead("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\VB:Voicemeeter {17359A74-1236-5467}", "UninstallString", "")
-
-		; Restore previous RegView setting.
-		SetRegView regView
-
-		if (uninstallString) {
-			SplitPath uninstallString, , &installDir
-			return installDir
-		} else {
-			; We were unable to get UninstallString from registry, so assume Voicemeeter is not installed.
-			throw Error("Voicemeeter is not installed")
-		}
-	}
-
-	; Login
-
-	_Login() {
-		result := DllCall(this._vmr.Login)
-		switch result {
-			; OK
-			case 0:
-				return
-
-			; OK but Voicemeeter application not launched
-			case 1:
-				if (VoicemeeterRemote.VoicemeeterType.IsDefined(this._vmType)) {
-					DllCall(this._vmr.RunVoicemeeter, "Int", this._vmType)
-				} else {
-					throw Error("Successfully logged into Voicemeeter Remote, but Voicemeeter is not running.")
-				}
-
-			; Cannot get client (unexpected)
-			case -1:
-				throw Error("Unexpected error while calling VBVMR_Login: Cannot get client")
-
-			; Unexpected login (logout was expected before)
-			case -2:
-				this._Logout()
-				this._Login()
-
-			default:
-				throw Error("Unexpected error while calling VBVMR_Login")
-		}
-	}
-
-	_Logout() {
-		result := DllCall(this._vmr.Logout)
-		if (result != 0) {
-			throw Error("Unexpected error while calling VBVMR_Logout")
-		}
-	}
-
-	; General Information
-
-	GetVoicemeeterType() {
-		value := Buffer(4)
-		switch DllCall(this._vmr.GetVoicemeeterType, "Ptr", value) {
-			case 0:
-				return NumGet(value, "Int")
-		}
-	}
-
-	GetVoicemeeterVersion() {
-		value := Buffer(4)
-		switch DllCall(this._vmr.GetVoicemeeterVersion, "Ptr", value) {
-			case 0:
-				return NumGet(value, "Int")
-		}
-	}
-
-	; Get parameters
-
-	IsParametersDirty() {
-		return DllCall(this._vmr.IsParametersDirty)
-	}
-
-	GetParameterFloat(paramName) {
-		value := Buffer(4)
-		switch DllCall(this._vmr.GetParameterFloat, "AStr", paramName, "Ptr", value) {
-			case 0:
-				return NumGet(value, "Float")
-		}
-	}
-
-	GetParameterString(paramName) {
-		value := Buffer(1024)
-		switch DllCall(this._vmr.GetParameterString, "AStr", paramName, "Ptr", value) {
-			case 0:
-				return StrGet(value, "UTF-16")
-		}
-	}
-
-	; Set parameters
-
-	SetParameterFloat(paramName, value) {
-		switch DllCall(this._vmr.SetParameterFloat, "AStr", paramName, "Float", value) {
-			case 0:
-				return
-		}
-	}
-
-	SetParameterString(paramName, value) {
-		switch DllCall(this._vmr.SetParameterString, "AStr", paramName, "Str", value) {
-			case 0:
-				return
-		}
-	}
-
-	SetParameters(params) {
-		switch DllCall(this._vmr.SetParameters, "Str", params) {
-			case 0:
-				return
-		}
-	}
-
-	; Misc. functions
-
-	SetVoicemeeterType(vmType) {
-		if (!(vmType is Integer)) {
-			throw TypeError("Expected value type Integer, but received " . Type(vmType) . ".", this.SetVoicemeeterType.Name, vmType)
-		} else if (!VoicemeeterRemote.VoicemeeterType.IsDefined(vmType)) {
-			throw ValueError("Value must be a defined property in VoicemeeterRemote.VoicemeeterType.", this.SetVoicemeeterType.Name, vmType)
+		__Delete() {
+			this._Logout()
 		}
 
-		this._vmType := vmType
-	}
+		_GetVoicemeeterInstallDir() {
+			; Cache the current RegView setting to be restored after reading the registry.
+			regView := A_RegView
 
-	BuildParamString(values*) {
-		str := ""
-		for index, value in values {
-			str .= value . ";"
+			; Force system to read from 32-bit registry.
+			SetRegView 32
+
+			; Get Voicemeeter install folder by reading the uninstall program path from the registry.
+			uninstallString := RegRead("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\VB:Voicemeeter {17359A74-1236-5467}", "UninstallString", "")
+
+			; Restore previous RegView setting.
+			SetRegView regView
+
+			if (uninstallString) {
+				SplitPath uninstallString, , &installDir
+				return installDir
+			} else {
+				; We were unable to get UninstallString from registry, so assume Voicemeeter is not installed.
+				throw Error("Voicemeeter is not installed")
+			}
 		}
-		return SubStr(str, 1, -1)
-	}
 
-	ShowVoicemeeterWindow() {
-		WinShow VoicemeeterRemote.WindowClass
-		WinActivate VoicemeeterRemote.WindowClass
-	}
+		; Login
 
-	HideVoicemeeterWindow() {
-		WinHide VoicemeeterRemote.WindowClass
-	}
+		_Login() {
+			result := DllCall(this._vmr.Login)
+			switch result {
+				; OK
+				case 0:
+					return
 
-	ToggleVoicemeeterWindow() {
-		if WinActive(VoicemeeterRemote.WindowClass) {
-			this.HideVoicemeeterWindow()
-		} else {
-			this.ShowVoicemeeterWindow()
+					; OK but Voicemeeter application not launched
+				case 1:
+					if (Voicemeeter.VoicemeeterType.IsDefined(this._vmType)) {
+						DllCall(this._vmr.RunVoicemeeter, "Int", this._vmType)
+					} else {
+						throw Error("Successfully logged into Voicemeeter Remote, but Voicemeeter is not running.")
+					}
+
+					; Cannot get client (unexpected)
+				case -1:
+					throw Error("Unexpected error while calling VBVMR_Login: Cannot get client")
+
+					; Unexpected login (logout was expected before)
+				case -2:
+					this._Logout()
+					this._Login()
+
+				default:
+					throw Error("Unexpected error while calling VBVMR_Login")
+			}
+		}
+
+		_Logout() {
+			result := DllCall(this._vmr.Logout)
+			if (result != 0) {
+				throw Error("Unexpected error while calling VBVMR_Logout")
+			}
+		}
+
+		; General Information
+
+		GetVoicemeeterType() {
+			value := Buffer(4)
+			switch DllCall(this._vmr.GetVoicemeeterType, "Ptr", value) {
+				case 0:
+					return NumGet(value, "Int")
+			}
+		}
+
+		GetVoicemeeterVersion() {
+			value := Buffer(4)
+			switch DllCall(this._vmr.GetVoicemeeterVersion, "Ptr", value) {
+				case 0:
+					return NumGet(value, "Int")
+			}
+		}
+
+		; Get parameters
+
+		IsParametersDirty() {
+			return DllCall(this._vmr.IsParametersDirty)
+		}
+
+		GetParameterFloat(paramName) {
+			value := Buffer(4)
+			switch DllCall(this._vmr.GetParameterFloat, "AStr", paramName, "Ptr", value) {
+				case 0:
+					return NumGet(value, "Float")
+			}
+		}
+
+		GetParameterString(paramName) {
+			value := Buffer(1024)
+			switch DllCall(this._vmr.GetParameterString, "AStr", paramName, "Ptr", value) {
+				case 0:
+					return StrGet(value, "UTF-16")
+			}
+		}
+
+		; Set parameters
+
+		SetParameterFloat(paramName, value) {
+			switch DllCall(this._vmr.SetParameterFloat, "AStr", paramName, "Float", value) {
+				case 0:
+					return
+			}
+		}
+
+		SetParameterString(paramName, value) {
+			switch DllCall(this._vmr.SetParameterString, "AStr", paramName, "Str", value) {
+				case 0:
+					return
+			}
+		}
+
+		SetParameters(params) {
+			switch DllCall(this._vmr.SetParameters, "Str", params) {
+				case 0:
+					return
+			}
+		}
+
+		; Misc. functions
+
+		SetVoicemeeterType(vmType) {
+			if (!(vmType is Integer)) {
+				throw TypeError("Expected value type Integer, but received " . Type(vmType) . ".", this.SetVoicemeeterType.Name, vmType)
+			} else if (!Voicemeeter.VoicemeeterType.IsDefined(vmType)) {
+				throw ValueError("Value must be a defined property in Voicemeeter.VoicemeeterType.", this.SetVoicemeeterType.Name, vmType)
+			}
+
+			this._vmType := vmType
+		}
+
+		BuildParamString(values*) {
+			str := ""
+			for index, value in values {
+				str .= value . ";"
+			}
+			return SubStr(str, 1, -1)
+		}
+
+		ShowVoicemeeterWindow() {
+			WinShow Voicemeeter.WindowClass
+			WinActivate Voicemeeter.WindowClass
+		}
+
+		HideVoicemeeterWindow() {
+			WinHide Voicemeeter.WindowClass
+		}
+
+		ToggleVoicemeeterWindow() {
+			if WinActive(Voicemeeter.WindowClass) {
+				this.HideVoicemeeterWindow()
+			} else {
+				this.ShowVoicemeeterWindow()
+			}
 		}
 	}
 }
