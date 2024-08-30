@@ -239,7 +239,17 @@
 		 * @returns {Integer}
 		 */
 		IsParametersDirty() {
-			return DllCall(this._vmr.IsParametersDirty)
+			response := DllCall(this._vmr.IsParametersDirty)
+			switch response {
+				case 0, 1:
+					return response
+				case -1:
+					throw Error("An unexpected error occurred.", this.IsParametersDirty.Name, response)
+				case -2:
+					throw Error("Voicemeeter is not running.", this.IsParametersDirty.Name, response)
+				default:
+					throw Error("An unknown error occurred.", this.IsParametersDirty.Name, response)
+			}
 		}
 
 		/**
