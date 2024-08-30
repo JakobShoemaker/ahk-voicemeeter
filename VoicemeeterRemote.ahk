@@ -51,12 +51,20 @@
 		}
 	}
 
+	/**
+	 * An enum representing a Voicemeeter application type.
+	 * @enum {Integer}
+	 */
 	class VoicemeeterType extends Voicemeeter.VoicemeeterEnum {
 		static Voicemeeter => 1
 		static VoicemeeterBanana => 2
 		static VoicemeeterPotato => 3
 	}
 
+	/**
+	 * An enum representing an audio device type.
+	 * @enum {Integer}
+	 */
 	class DeviceType extends Voicemeeter.VoicemeeterEnum {
 		static MME => 1
 		static WDM => 3
@@ -64,6 +72,10 @@
 		static ASIO => 5
 	}
 
+	/**
+	 * The Voicemeeter Remote DLL interface.
+	 * @private
+	 */
 	class VoicemeeterRemoteInterface {
 		__New(dllPath) {
 			; Load the VoicemeeterRemote library.
@@ -109,7 +121,16 @@
 
 	static WindowClass => "ahk_class VBCABLE0Voicemeeter0MainWindow0"
 
+	/**
+	 * The Voicemeeter Remote interface.
+	 */
 	class VoicemeeterRemote {
+		/**
+		 * @type {Voicemeeter.VoicemeeterRemoteInterface}
+		 * @private
+		 */
+		_vmr := 0
+
 		__New() {
 			vmFolder := this._GetVoicemeeterInstallDir()
 			dllName := A_Is64bitOS ? "VoicemeeterRemote64.dll" : "VoicemeeterRemote.dll"
@@ -125,6 +146,11 @@
 			this._Logout()
 		}
 
+		/**
+		 * Get the directory that contains the Voicemeeter installation from the registry.
+		 * @returns {String} A string containing the path to the install directory, or an empty string if nothing was found.
+		 * @private
+		 */
 		_GetVoicemeeterInstallDir() {
 			; Cache the current RegView setting to be restored after reading the registry.
 			regView := A_RegView
@@ -144,6 +170,10 @@
 
 		; Login
 
+		/**
+		 * Open communication pipe with Voicemeeter.
+		 * @private
+		 */
 		_Login() {
 			result := DllCall(this._vmr.Login)
 			switch result {
@@ -165,6 +195,10 @@
 			}
 		}
 
+		/**
+		 * Close communication pipe with Voicemeeter.
+		 * @private
+		 */
 		_Logout() {
 			result := DllCall(this._vmr.Logout)
 			if (result != 0) {
@@ -174,6 +208,10 @@
 
 		; General Information
 
+		/**
+		 * Get the Voicemeeter type.
+		 * @returns {Integer}
+		 */
 		GetVoicemeeterType() {
 			value := Buffer(4)
 			switch DllCall(this._vmr.GetVoicemeeterType, "Ptr", value) {
@@ -182,6 +220,10 @@
 			}
 		}
 
+		/**
+		 * Get the Voicemeeter version
+		 * @returns {Integer}
+		 */
 		GetVoicemeeterVersion() {
 			value := Buffer(4)
 			switch DllCall(this._vmr.GetVoicemeeterVersion, "Ptr", value) {
@@ -192,10 +234,19 @@
 
 		; Get parameters
 
+		/**
+		 * Check if parameters have changed. Call this function periodically (typically every 10 or 20ms).
+		 * @returns {Integer}
+		 */
 		IsParametersDirty() {
 			return DllCall(this._vmr.IsParametersDirty)
 		}
 
+		/**
+		 * Get a parameter value as a floating point number.
+		 * @param {String} paramName The name of the parameter.
+		 * @returns {Float}
+		 */
 		GetParameterFloat(paramName) {
 			value := Buffer(4)
 			switch DllCall(this._vmr.GetParameterFloat, "AStr", paramName, "Ptr", value) {
@@ -204,6 +255,11 @@
 			}
 		}
 
+		/**
+		 * Get a parameter value as a string.
+		 * @param {String} paramName The name of the parameter.
+		 * @returns {String}
+		 */
 		GetParameterString(paramName) {
 			value := Buffer(1024)
 			switch DllCall(this._vmr.GetParameterString, "AStr", paramName, "Ptr", value) {
@@ -214,6 +270,11 @@
 
 		; Set parameters
 
+		/**
+		 * Set a floating point parameter value.
+		 * @param {String} paramName The name of the parameter.
+		 * @param {Float} value The value to assign to the parameter.
+		 */
 		SetParameterFloat(paramName, value) {
 			switch DllCall(this._vmr.SetParameterFloat, "AStr", paramName, "Float", value) {
 				case 0:
@@ -221,6 +282,11 @@
 			}
 		}
 
+		/**
+		 * Set a string parameter value.
+		 * @param {String} paramName The name of the parameter.
+		 * @param {String} value The value to assign to the parameter.
+		 */
 		SetParameterString(paramName, value) {
 			switch DllCall(this._vmr.SetParameterString, "AStr", paramName, "Str", value) {
 				case 0:
@@ -228,6 +294,10 @@
 			}
 		}
 
+		/**
+		 * Set one or several parameters by a script.
+		 * @param {String} params A string containing the script.
+		 */
 		SetParameters(params) {
 			switch DllCall(this._vmr.SetParameters, "Str", params) {
 				case 0:
@@ -245,15 +315,24 @@
 			return SubStr(str, 1, -1)
 		}
 
+		/**
+		 * Show and activate the Voicemeeter window.
+		 */
 		ShowVoicemeeterWindow() {
 			WinShow Voicemeeter.WindowClass
 			WinActivate Voicemeeter.WindowClass
 		}
 
+		/**
+		 * Hide the Voicemeeter window.
+		 */
 		HideVoicemeeterWindow() {
 			WinHide Voicemeeter.WindowClass
 		}
 
+		/**
+		 * Toggles the Voicemeeter window between shown and hidden. If the window is hidden or inactive, shows and activates the window, otherwise hides the window.
+		 */
 		ToggleVoicemeeterWindow() {
 			if WinActive(Voicemeeter.WindowClass) {
 				this.HideVoicemeeterWindow()
