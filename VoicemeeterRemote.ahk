@@ -31,7 +31,7 @@
 		}
 
 		/**
-		 * Enumerates values of the enumeration. This method is typically not called directly. Instead, the map object is passed directly to a {@link https://www.autohotkey.com/docs/v2/lib/For.htm|for-loop}.
+		 * Enumerates values of the enumeration. This method is typically not called directly. Instead, the enumeration is passed directly to a {@link https://www.autohotkey.com/docs/v2/lib/For.htm|for-loop}.
 		 * @param {Integer} NumberOfVars The number of variables passed to the calling for-loop.
 		 * @returns {Enumerator} A new {@link https://www.autohotkey.com/docs/v2/lib/Enumerator.htm|enumerator}.
 		 */
