@@ -5,22 +5,22 @@
 	class Enum {
 		/**
 		 * Determines whether a given integral value, or its name as a string, exists in the enumeration.
-		 * @param {Integer | String} value The value or name of a constant in the enumeration.
-		 * @returns {Integer} 1 (true) if `value` is defined in the enumeration, otherwise 0 (false).
+		 * @param {Integer | String} Value The value or name of a constant in the enumeration.
+		 * @returns {Integer} 1 (true) if `Value` is defined in the enumeration, otherwise 0 (false).
 		 */
-		static IsDefined(value) {
-			if (value is Integer) {
+		static IsDefined(Value) {
+			if (Value is Integer) {
 				for enumValue in this {
-					if (value == enumValue) {
+					if (Value == enumValue) {
 						return true
 					}
 				}
 				return false
 			}
 
-			if (value is String) {
+			if (Value is String) {
 				for name, _ in this {
-					if (value == name) {
+					if (Value == name) {
 						return true
 					}
 				}
@@ -34,27 +34,27 @@
 		 * Enumerates values of the enumeration. This method is typically not called directly. Instead, the map object is passed directly to a {@link https://www.autohotkey.com/docs/v2/lib/For.htm|for-loop}.
 		 * @returns A new {@link https://www.autohotkey.com/docs/v2/lib/Enumerator.htm|enumerator}.
 		 */
-		static __Enum(numberOfVars) {
+		static __Enum(NumberOfVars) {
 			OwnProps := ObjOwnProps(this)
 
-			EnumerateOwnProps(&value, &name?) {
-				while (OwnProps(&name, &value)) {
-					if (value is Integer) {
+			EnumerateOwnProps(&Value, &Name?) {
+				while (OwnProps(&Name, &Value)) {
+					if (Value is Integer) {
 						return true
 					}
 				}
 				return false
 			}
 
-			EnumerateValues(&value) {
-				return EnumerateOwnProps(&value)
+			EnumerateValues(&Value) {
+				return EnumerateOwnProps(&Value)
 			}
 
-			EnumerateNameValuePairs(&name, &value) {
-				return EnumerateOwnProps(&value, &name)
+			EnumerateNameValuePairs(&Name, &Value) {
+				return EnumerateOwnProps(&Value, &Name)
 			}
 
-			return numberOfVars == 1 ? EnumerateValues : EnumerateNameValuePairs
+			return NumberOfVars == 1 ? EnumerateValues : EnumerateNameValuePairs
 		}
 	}
 
@@ -87,11 +87,11 @@
 		/**
 		 * Loads the VoicemeeterRemote DLL and gets function pointers.
 		 */
-		__New(dllPath) {
+		__New(DllPath) {
 			; Load the VoicemeeterRemote library.
-			this._hModule := DllCall("LoadLibrary", "Str", dllPath, "Ptr")
+			this._hModule := DllCall("LoadLibrary", "Str", DllPath, "Ptr")
 
-			GetProcAddress := (procName) => DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", procName, "Ptr")
+			GetProcAddress := (ProcName) => DllCall("GetProcAddress", "Ptr", this._hModule, "AStr", ProcName, "Ptr")
 
 			; Login
 			this.Login := GetProcAddress("VBVMR_Login")
@@ -275,12 +275,12 @@
 
 		/**
 		 * Get a parameter value as a floating point number.
-		 * @param {String} paramName The name of the parameter.
+		 * @param {String} ParamName The name of the parameter.
 		 * @returns {Float} The value of the parameter.
 		 */
-		GetParameterFloat(paramName) {
+		GetParameterFloat(ParamName) {
 			value := Buffer(4)
-			switch DllCall(this._vmr.GetParameterFloat, "AStr", paramName, "Ptr", value) {
+			switch DllCall(this._vmr.GetParameterFloat, "AStr", ParamName, "Ptr", value) {
 				case 0:
 					return NumGet(value, "Float")
 			}
@@ -288,12 +288,12 @@
 
 		/**
 		 * Get a parameter value as a string.
-		 * @param {String} paramName The name of the parameter.
+		 * @param {String} ParamName The name of the parameter.
 		 * @returns {String} The value of the parameter.
 		 */
-		GetParameterString(paramName) {
+		GetParameterString(ParamName) {
 			value := Buffer(1024)
-			switch DllCall(this._vmr.GetParameterString, "AStr", paramName, "Ptr", value) {
+			switch DllCall(this._vmr.GetParameterString, "AStr", ParamName, "Ptr", value) {
 				case 0:
 					return StrGet(value, "UTF-16")
 			}
@@ -303,11 +303,11 @@
 
 		/**
 		 * Set a floating point parameter value.
-		 * @param {String} paramName The name of the parameter.
-		 * @param {Float} value The value to assign to the parameter.
+		 * @param {String} ParamName The name of the parameter.
+		 * @param {Float} Value The value to assign to the parameter.
 		 */
-		SetParameterFloat(paramName, value) {
-			switch DllCall(this._vmr.SetParameterFloat, "AStr", paramName, "Float", value) {
+		SetParameterFloat(ParamName, Value) {
+			switch DllCall(this._vmr.SetParameterFloat, "AStr", ParamName, "Float", Value) {
 				case 0:
 					return
 			}
@@ -315,11 +315,11 @@
 
 		/**
 		 * Set a string parameter value.
-		 * @param {String} paramName The name of the parameter.
-		 * @param {String} value The value to assign to the parameter.
+		 * @param {String} ParamName The name of the parameter.
+		 * @param {String} Value The value to assign to the parameter.
 		 */
-		SetParameterString(paramName, value) {
-			switch DllCall(this._vmr.SetParameterString, "AStr", paramName, "Str", value) {
+		SetParameterString(ParamName, Value) {
+			switch DllCall(this._vmr.SetParameterString, "AStr", ParamName, "Str", Value) {
 				case 0:
 					return
 			}
@@ -327,10 +327,10 @@
 
 		/**
 		 * Set one or several parameters by a script.
-		 * @param {String} params A string containing the script.
+		 * @param {String} Params A string containing the script.
 		 */
-		SetParameters(params) {
-			switch DllCall(this._vmr.SetParameters, "Str", params) {
+		SetParameters(Params) {
+			switch DllCall(this._vmr.SetParameters, "Str", Params) {
 				case 0:
 					return
 			}
@@ -340,12 +340,12 @@
 
 		/**
 		 * Builds a string containing a script from a list of strings containing script statements for {@link Voicemeeter.Remote#SetParameters|SetParameters}.
-		 * @param {...String} values A string containing a script for {@link Voicemeeter.Remote#SetParameters|SetParameters}.
+		 * @param {...String} Values A string containing a script for {@link Voicemeeter.Remote#SetParameters|SetParameters}.
 		 * @returns {String} A string containing each of the provided scripts.
 		 */
-		BuildParamString(values*) {
+		BuildParamString(Values*) {
 			str := ""
-			for index, value in values {
+			for index, value in Values {
 				str .= value . ";"
 			}
 			return SubStr(str, 1, -1)
