@@ -4,7 +4,7 @@
 	 */
 	class Enum {
 		/**
-		 * Returns an Integer indicating whether a given integral value, or its name as a String, exists in the enumeration.
+		 * Determines whether a given integral value, or its name as a String, exists in the enumeration.
 		 * @param {Integer | String} value The value or name of a constant in the enumeration.
 		 * @returns {Integer} 1 (true) if `value` is defined in the enumeration, otherwise 0 (false).
 		 */
