@@ -2,7 +2,7 @@
 	/**
 	 * A class containing helper methods for integral enumerations used by the Voicemeeter Remote SDK.
 	 */
-	class VoicemeeterEnum {
+	class Enum {
 		/**
 		 * Returns an Integer indicating whether a given integral value, or its name as a String, exists in the enumeration.
 		 * @param {Integer | String} value The value or name of a constant in the enumeration.
@@ -62,7 +62,7 @@
 	 * An enum representing a Voicemeeter application type.
 	 * @enum {Integer}
 	 */
-	class VoicemeeterType extends Voicemeeter.VoicemeeterEnum {
+	class Type extends Voicemeeter.Enum {
 		static Voicemeeter => 1
 		static VoicemeeterBanana => 2
 		static VoicemeeterPotato => 3
@@ -72,7 +72,7 @@
 	 * An enum representing an audio device type.
 	 * @enum {Integer}
 	 */
-	class DeviceType extends Voicemeeter.VoicemeeterEnum {
+	class DeviceType extends Voicemeeter.Enum {
 		static MME => 1
 		static WDM => 3
 		static KS => 4
@@ -83,7 +83,7 @@
 	 * A collection of function pointers for the Voicemeeter Remote DLL interface.
 	 * @private
 	 */
-	class VoicemeeterRemoteInterface {
+	class RemoteInterface {
 		/**
 		 * Loads the VoicemeeterRemote DLL and gets function pointers.
 		 */
@@ -138,15 +138,15 @@
 	/**
 	 * The Voicemeeter Remote interface.
 	 */
-	class VoicemeeterRemote {
+	class Remote {
 		/**
-		 * @type {Voicemeeter.VoicemeeterRemoteInterface}
+		 * @type {Voicemeeter.RemoteInterface}
 		 * @private
 		 */
 		_vmr := 0
 
 		/**
-		 * Constructs a new VoicemeeterRemote instance. This loads the Voicemeeter Remote DLL and logs in to the server.
+		 * Constructs a new Voicemeeter.Remote instance. This loads the Voicemeeter Remote DLL and logs in to the server.
 		 */
 		__New() {
 			vmFolder := this._GetVoicemeeterInstallDir()
@@ -154,7 +154,7 @@
 			dllPath := vmFolder . "\" . dllName
 
 			; Build an interface of function pointers.
-			this._vmr := Voicemeeter.VoicemeeterRemoteInterface(dllPath)
+			this._vmr := Voicemeeter.RemoteInterface(dllPath)
 
 			this._Login()
 		}
@@ -339,8 +339,8 @@
 		; Misc. functions
 
 		/**
-		 * Builds a string containing a script from a list of strings containing script statements for {@link Voicemeeter.VoicemeeterRemote#SetParameters|SetParameters}.
-		 * @param {...String} values A string containing a script for {@link Voicemeeter.VoicemeeterRemote#SetParameters|SetParameters}.
+		 * Builds a string containing a script from a list of strings containing script statements for {@link Voicemeeter.Remote#SetParameters|SetParameters}.
+		 * @param {...String} values A string containing a script for {@link Voicemeeter.Remote#SetParameters|SetParameters}.
 		 * @returns {String} A string containing each of the provided scripts.
 		 */
 		BuildParamString(values*) {
