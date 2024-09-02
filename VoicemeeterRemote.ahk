@@ -6,7 +6,7 @@
 		/**
 		 * Returns an Integer indicating whether a given integral value, or its name as a String, exists in the enumeration.
 		 * @param {Integer | String} value The value or name of a constant in the enumeration.
-		 * @returns {Integer} This function returns 1 (true) if `value` is defined in the enumeration, otherwise 0 (false).
+		 * @returns {Integer} 1 (true) if `value` is defined in the enumeration, otherwise 0 (false).
 		 */
 		static IsDefined(value) {
 			if (value is Integer) {
@@ -32,7 +32,7 @@
 
 		/**
 		 * Enumerates values of the enumeration. This method is typically not called directly. Instead, the map object is passed directly to a {@link https://www.autohotkey.com/docs/v2/lib/For.htm|for-loop}.
-		 * @returns Returns a new {@link https://www.autohotkey.com/docs/v2/lib/Enumerator.htm|enumerator}.
+		 * @returns A new {@link https://www.autohotkey.com/docs/v2/lib/Enumerator.htm|enumerator}.
 		 */
 		static __Enum(numberOfVars) {
 			OwnProps := ObjOwnProps(this)
@@ -84,6 +84,9 @@
 	 * @private
 	 */
 	class VoicemeeterRemoteInterface {
+		/**
+		 * Loads the VoicemeeterRemote DLL and gets function pointers.
+		 */
 		__New(dllPath) {
 			; Load the VoicemeeterRemote library.
 			this._hModule := DllCall("LoadLibrary", "Str", dllPath, "Ptr")
@@ -120,6 +123,10 @@
 			; this.Input_GetDeviceDesc := GetProcAddress("VBVMR_Input_GetDeviceDescW")
 		}
 
+		/**
+		 * Frees the VoicemeeterRemote DLL.
+		 * @private
+		 */
 		__Delete() {
 			; Unload the VoicemeeterRemote library.
 			DllCall("FreeLibrary", "Ptr", this._hModule)
@@ -138,6 +145,9 @@
 		 */
 		_vmr := 0
 
+		/**
+		 * Constructs a new VoicemeeterRemote instance. This loads the Voicemeeter Remote DLL and logs in to the server.
+		 */
 		__New() {
 			vmFolder := this._GetVoicemeeterInstallDir()
 			dllName := A_Is64bitOS ? "VoicemeeterRemote64.dll" : "VoicemeeterRemote.dll"
@@ -149,6 +159,10 @@
 			this._Login()
 		}
 
+		/**
+		 * Logs out of the Voicemeeter server.
+		 * @private
+		 */
 		__Delete() {
 			this._Logout()
 		}
@@ -217,7 +231,7 @@
 
 		/**
 		 * Get the Voicemeeter type.
-		 * @returns {Integer}
+		 * @returns {Integer} An integer representing the type of Voicemeeter.
 		 */
 		GetVoicemeeterType() {
 			value := Buffer(4)
@@ -229,7 +243,7 @@
 
 		/**
 		 * Get the Voicemeeter version
-		 * @returns {Integer}
+		 * @returns {Integer} An integer representing the Voicemeeter version.
 		 */
 		GetVoicemeeterVersion() {
 			value := Buffer(4)
@@ -243,7 +257,7 @@
 
 		/**
 		 * Check if parameters have changed. Call this function periodically (typically every 10 or 20ms).
-		 * @returns {Integer}
+		 * @returns {Integer} 1 (true) if parameters have changed, otherwise 0 (false).
 		 */
 		IsParametersDirty() {
 			response := DllCall(this._vmr.IsParametersDirty)
@@ -262,7 +276,7 @@
 		/**
 		 * Get a parameter value as a floating point number.
 		 * @param {String} paramName The name of the parameter.
-		 * @returns {Float}
+		 * @returns {Float} The value of the parameter.
 		 */
 		GetParameterFloat(paramName) {
 			value := Buffer(4)
@@ -275,7 +289,7 @@
 		/**
 		 * Get a parameter value as a string.
 		 * @param {String} paramName The name of the parameter.
-		 * @returns {String}
+		 * @returns {String} The value of the parameter.
 		 */
 		GetParameterString(paramName) {
 			value := Buffer(1024)
@@ -324,6 +338,11 @@
 
 		; Misc. functions
 
+		/**
+		 * Builds a string containing a script from a list of strings containing script statements for {@link Voicemeeter.VoicemeeterRemote#SetParameters|SetParameters}.
+		 * @param {...String} values A string containing a script for {@link Voicemeeter.VoicemeeterRemote#SetParameters|SetParameters}.
+		 * @returns {String} A string containing each of the provided scripts.
+		 */
 		BuildParamString(values*) {
 			str := ""
 			for index, value in values {
