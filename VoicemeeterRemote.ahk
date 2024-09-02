@@ -1,8 +1,11 @@
 ﻿class Voicemeeter {
+	/**
+	 * A class containing helper methods for integral enumerations used by the Voicemeeter Remote SDK.
+	 */
 	class VoicemeeterEnum {
 		/**
 		 * Returns an Integer indicating whether a given integral value, or its name as a String, exists in the enumeration.
-		 * @param {Integer | String} value
+		 * @param {Integer | String} value The value or name of a constant in the enumeration.
 		 * @returns {Integer} This function returns 1 (true) if `value` is defined in the enumeration, otherwise 0 (false).
 		 */
 		static IsDefined(value) {
@@ -27,6 +30,10 @@
 			return false
 		}
 
+		/**
+		 * Enumerates values of the enumeration. This method is typically not called directly. Instead, the map object is passed directly to a {@link https://www.autohotkey.com/docs/v2/lib/For.htm|for-loop}.
+		 * @returns Returns a new {@link https://www.autohotkey.com/docs/v2/lib/Enumerator.htm|enumerator}.
+		 */
 		static __Enum(numberOfVars) {
 			OwnProps := ObjOwnProps(this)
 
@@ -73,7 +80,7 @@
 	}
 
 	/**
-	 * The Voicemeeter Remote DLL interface.
+	 * A collection of function pointers for the Voicemeeter Remote DLL interface.
 	 * @private
 	 */
 	class VoicemeeterRemoteInterface {
