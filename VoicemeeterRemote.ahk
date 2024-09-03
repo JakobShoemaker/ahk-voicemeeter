@@ -341,13 +341,13 @@
 
 		/**
 		 * Builds a string containing a script from a list of strings containing script statements for {@link Voicemeeter.Remote#SetParameters|SetParameters}.
-		 * @param {...String} Values A string containing a script for {@link Voicemeeter.Remote#SetParameters|SetParameters}.
+		 * @param {...String} Value A string containing a script for {@link Voicemeeter.Remote#SetParameters|SetParameters}.
 		 * @returns {String} A string containing each of the provided scripts.
 		 */
-		BuildParamString(Values*) {
+		BuildParamString(Value*) {
 			str := ""
-			for index, value in Values {
-				str .= value . ";"
+			for i in Value {
+				str .= Value[i] . ";"
 			}
 			return SubStr(str, 1, -1)
 		}
