@@ -243,7 +243,7 @@
 		}
 
 		/**
-		 * Get the Voicemeeter version
+		 * Get the Voicemeeter version.
 		 * @returns {Integer} An integer representing the Voicemeeter version.
 		 */
 		GetVoicemeeterVersion() {
