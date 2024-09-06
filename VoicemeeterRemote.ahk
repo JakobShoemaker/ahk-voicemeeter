@@ -1,4 +1,7 @@
-﻿class Voicemeeter {
+﻿/**
+ * The Voicemeeter Remote interface.
+ */
+class Voicemeeter {
 	/**
 	 * A class containing helper methods for integral enumerations used by the Voicemeeter Remote SDK. This class exists to be extended by other classes, and is not intended to be referenced directly.
 	 */
@@ -136,246 +139,231 @@
 
 	static WindowClass => "ahk_class VBCABLE0Voicemeeter0MainWindow0"
 
-	/**
-	 * The Voicemeeter Remote interface.
-	 */
-	class Remote {
 		/**
 		 * @type {Voicemeeter.RemoteInterface}
 		 * @private
 		 */
 		_vmr := 0
 
-		/**
-		 * Constructs a new Voicemeeter.Remote instance. This loads the Voicemeeter Remote DLL and logs in to the server.
-		 */
-		__New() {
-			vmFolder := this._GetVoicemeeterInstallDir()
-			dllName := A_Is64bitOS ? "VoicemeeterRemote64.dll" : "VoicemeeterRemote.dll"
-			dllPath := vmFolder . "\" . dllName
+	/**
+	 * Constructs a new Voicemeeter instance. This loads the Voicemeeter Remote DLL and logs in to the server.
+	 */
+	__New() {
+		vmFolder := this._GetVoicemeeterInstallDir()
+		dllName := A_Is64bitOS ? "VoicemeeterRemote64.dll" : "VoicemeeterRemote.dll"
+		dllPath := vmFolder . "\" . dllName
 
-			; Build an interface of function pointers.
-			this._vmr := Voicemeeter.RemoteInterface(dllPath)
+		; Build an interface of function pointers.
+		this._vmr := Voicemeeter.RemoteInterface(dllPath)
 
-			this._Login()
+		this._Login()
+	}
+
+	/**
+	 * Logs out of the Voicemeeter server.
+	 * @private
+	 */
+	__Delete() {
+		this._Logout()
+	}
+
+	/**
+	 * Get the directory that contains the Voicemeeter installation from the registry.
+	 * @returns {String} A string containing the path to the install directory, or an empty string if nothing was found.
+	 * @private
+	 */
+	_GetVoicemeeterInstallDir() {
+		; Cache the current RegView setting to be restored after reading the registry.
+		regView := A_RegView
+
+		; Force system to read from 32-bit registry.
+		SetRegView 32
+
+		; Get Voicemeeter install folder by reading the uninstall program path from the registry.
+		uninstallString := RegRead("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\VB:Voicemeeter {17359A74-1236-5467}", "UninstallString", "")
+
+		; Restore previous RegView setting.
+		SetRegView regView
+
+		SplitPath uninstallString, , &installDir
+		return installDir
+	}
+
+	/**
+	 * Open communication pipe with Voicemeeter.
+	 * @private
+	 */
+	_Login() {
+		result := DllCall(this._vmr.Login)
+		switch result {
+			case 0: ; OK
+				return
+
+			case 1: ; OK but Voicemeeter application not launched
+				return
+
+			case -1: ; Cannot get client (unexpected)
+				throw Error("Unexpected error while calling VBVMR_Login: Cannot get client")
+
+			case -2: ; Unexpected login (logout was expected before)
+				this._Logout()
+				this._Login()
+
+			default:
+				throw Error("Unexpected error while calling VBVMR_Login")
 		}
+	}
 
-		/**
-		 * Logs out of the Voicemeeter server.
-		 * @private
-		 */
-		__Delete() {
-			this._Logout()
+	/**
+	 * Close communication pipe with Voicemeeter.
+	 * @private
+	 */
+	_Logout() {
+		result := DllCall(this._vmr.Logout)
+		if (result != 0) {
+			throw Error("Unexpected error while calling VBVMR_Logout")
 		}
+	}
 
-		/**
-		 * Get the directory that contains the Voicemeeter installation from the registry.
-		 * @returns {String} A string containing the path to the install directory, or an empty string if nothing was found.
-		 * @private
-		 */
-		_GetVoicemeeterInstallDir() {
-			; Cache the current RegView setting to be restored after reading the registry.
-			regView := A_RegView
-
-			; Force system to read from 32-bit registry.
-			SetRegView 32
-
-			; Get Voicemeeter install folder by reading the uninstall program path from the registry.
-			uninstallString := RegRead("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\VB:Voicemeeter {17359A74-1236-5467}", "UninstallString", "")
-
-			; Restore previous RegView setting.
-			SetRegView regView
-
-			SplitPath uninstallString, , &installDir
-			return installDir
+	/**
+	 * Get the Voicemeeter type.
+	 * @returns {Integer} An integer representing the type of Voicemeeter.
+	 */
+	GetVoicemeeterType() {
+		value := Buffer(4)
+		switch DllCall(this._vmr.GetVoicemeeterType, "Ptr", value) {
+			case 0:
+				return NumGet(value, "Int")
 		}
+	}
 
-		; Login
-
-		/**
-		 * Open communication pipe with Voicemeeter.
-		 * @private
-		 */
-		_Login() {
-			result := DllCall(this._vmr.Login)
-			switch result {
-				case 0: ; OK
-					return
-
-				case 1: ; OK but Voicemeeter application not launched
-					return
-
-				case -1: ; Cannot get client (unexpected)
-					throw Error("Unexpected error while calling VBVMR_Login: Cannot get client")
-
-				case -2: ; Unexpected login (logout was expected before)
-					this._Logout()
-					this._Login()
-
-				default:
-					throw Error("Unexpected error while calling VBVMR_Login")
-			}
+	/**
+	 * Get the Voicemeeter version.
+	 * @returns {Integer} An integer representing the Voicemeeter version.
+	 */
+	GetVoicemeeterVersion() {
+		value := Buffer(4)
+		switch DllCall(this._vmr.GetVoicemeeterVersion, "Ptr", value) {
+			case 0:
+				return NumGet(value, "Int")
 		}
+	}
 
-		/**
-		 * Close communication pipe with Voicemeeter.
-		 * @private
-		 */
-		_Logout() {
-			result := DllCall(this._vmr.Logout)
-			if (result != 0) {
-				throw Error("Unexpected error while calling VBVMR_Logout")
-			}
+	/**
+	 * Check if parameters have changed. Call this function periodically (typically every 10 or 20ms).
+	 * @returns {Integer} 1 (true) if parameters have changed, otherwise 0 (false).
+	 */
+	IsParametersDirty() {
+		response := DllCall(this._vmr.IsParametersDirty)
+		switch response {
+			case 0, 1:
+				return response
+			case -1:
+				throw Error("An unexpected error occurred.", this.IsParametersDirty.Name, response)
+			case -2:
+				throw Error("Voicemeeter is not running.", this.IsParametersDirty.Name, response)
+			default:
+				throw Error("An unknown error occurred.", this.IsParametersDirty.Name, response)
 		}
+	}
 
-		; General Information
-
-		/**
-		 * Get the Voicemeeter type.
-		 * @returns {Integer} An integer representing the type of Voicemeeter.
-		 */
-		GetVoicemeeterType() {
-			value := Buffer(4)
-			switch DllCall(this._vmr.GetVoicemeeterType, "Ptr", value) {
-				case 0:
-					return NumGet(value, "Int")
-			}
+	/**
+	 * Get a parameter value as a floating point number.
+	 * @param {String} ParamName The name of the parameter.
+	 * @returns {Float} The value of the parameter.
+	 */
+	GetParameterFloat(ParamName) {
+		value := Buffer(4)
+		switch DllCall(this._vmr.GetParameterFloat, "AStr", ParamName, "Ptr", value) {
+			case 0:
+				return NumGet(value, "Float")
 		}
+	}
 
-		/**
-		 * Get the Voicemeeter version.
-		 * @returns {Integer} An integer representing the Voicemeeter version.
-		 */
-		GetVoicemeeterVersion() {
-			value := Buffer(4)
-			switch DllCall(this._vmr.GetVoicemeeterVersion, "Ptr", value) {
-				case 0:
-					return NumGet(value, "Int")
-			}
+	/**
+	 * Get a parameter value as a string.
+	 * @param {String} ParamName The name of the parameter.
+	 * @returns {String} The value of the parameter.
+	 */
+	GetParameterString(ParamName) {
+		value := Buffer(1024)
+		switch DllCall(this._vmr.GetParameterString, "AStr", ParamName, "Ptr", value) {
+			case 0:
+				return StrGet(value, "UTF-16")
 		}
+	}
 
-		; Get parameters
-
-		/**
-		 * Check if parameters have changed. Call this function periodically (typically every 10 or 20ms).
-		 * @returns {Integer} 1 (true) if parameters have changed, otherwise 0 (false).
-		 */
-		IsParametersDirty() {
-			response := DllCall(this._vmr.IsParametersDirty)
-			switch response {
-				case 0, 1:
-					return response
-				case -1:
-					throw Error("An unexpected error occurred.", this.IsParametersDirty.Name, response)
-				case -2:
-					throw Error("Voicemeeter is not running.", this.IsParametersDirty.Name, response)
-				default:
-					throw Error("An unknown error occurred.", this.IsParametersDirty.Name, response)
-			}
+	/**
+	 * Set a floating point parameter value.
+	 * @param {String} ParamName The name of the parameter.
+	 * @param {Float} Value The value to assign to the parameter.
+	 */
+	SetParameterFloat(ParamName, Value) {
+		switch DllCall(this._vmr.SetParameterFloat, "AStr", ParamName, "Float", Value) {
+			case 0:
+				return
 		}
+	}
 
-		/**
-		 * Get a parameter value as a floating point number.
-		 * @param {String} ParamName The name of the parameter.
-		 * @returns {Float} The value of the parameter.
-		 */
-		GetParameterFloat(ParamName) {
-			value := Buffer(4)
-			switch DllCall(this._vmr.GetParameterFloat, "AStr", ParamName, "Ptr", value) {
-				case 0:
-					return NumGet(value, "Float")
-			}
+	/**
+	 * Set a string parameter value.
+	 * @param {String} ParamName The name of the parameter.
+	 * @param {String} Value The value to assign to the parameter.
+	 */
+	SetParameterString(ParamName, Value) {
+		switch DllCall(this._vmr.SetParameterString, "AStr", ParamName, "Str", Value) {
+			case 0:
+				return
 		}
+	}
 
-		/**
-		 * Get a parameter value as a string.
-		 * @param {String} ParamName The name of the parameter.
-		 * @returns {String} The value of the parameter.
-		 */
-		GetParameterString(ParamName) {
-			value := Buffer(1024)
-			switch DllCall(this._vmr.GetParameterString, "AStr", ParamName, "Ptr", value) {
-				case 0:
-					return StrGet(value, "UTF-16")
-			}
+	/**
+	 * Set one or several parameters by a script.
+	 * @param {String} Params A string containing the script.
+	 */
+	SetParameters(Params) {
+		switch DllCall(this._vmr.SetParameters, "Str", Params) {
+			case 0:
+				return
 		}
+	}
 
-		; Set parameters
-
-		/**
-		 * Set a floating point parameter value.
-		 * @param {String} ParamName The name of the parameter.
-		 * @param {Float} Value The value to assign to the parameter.
-		 */
-		SetParameterFloat(ParamName, Value) {
-			switch DllCall(this._vmr.SetParameterFloat, "AStr", ParamName, "Float", Value) {
-				case 0:
-					return
-			}
+	/**
+	 * Builds a string containing a script from a list of strings containing script statements for {@link Voicemeeter#SetParameters|SetParameters}.
+	 * @param {...String} Value A string containing a script for {@link Voicemeeter#SetParameters|SetParameters}.
+	 * @returns {String} A string containing each of the provided scripts.
+	 */
+	BuildParamString(Value*) {
+		str := ""
+		for i in Value {
+			str .= Value[i] . ";"
 		}
+		return SubStr(str, 1, -1)
+	}
 
-		/**
-		 * Set a string parameter value.
-		 * @param {String} ParamName The name of the parameter.
-		 * @param {String} Value The value to assign to the parameter.
-		 */
-		SetParameterString(ParamName, Value) {
-			switch DllCall(this._vmr.SetParameterString, "AStr", ParamName, "Str", Value) {
-				case 0:
-					return
-			}
-		}
+	/**
+	 * Show and activate the Voicemeeter window.
+	 */
+	ShowVoicemeeterWindow() {
+		WinShow Voicemeeter.WindowClass
+		WinActivate Voicemeeter.WindowClass
+	}
 
-		/**
-		 * Set one or several parameters by a script.
-		 * @param {String} Params A string containing the script.
-		 */
-		SetParameters(Params) {
-			switch DllCall(this._vmr.SetParameters, "Str", Params) {
-				case 0:
-					return
-			}
-		}
+	/**
+	 * Hide the Voicemeeter window.
+	 */
+	HideVoicemeeterWindow() {
+		WinHide Voicemeeter.WindowClass
+	}
 
-		; Misc. functions
-
-		/**
-		 * Builds a string containing a script from a list of strings containing script statements for {@link Voicemeeter.Remote#SetParameters|SetParameters}.
-		 * @param {...String} Value A string containing a script for {@link Voicemeeter.Remote#SetParameters|SetParameters}.
-		 * @returns {String} A string containing each of the provided scripts.
-		 */
-		BuildParamString(Value*) {
-			str := ""
-			for i in Value {
-				str .= Value[i] . ";"
-			}
-			return SubStr(str, 1, -1)
-		}
-
-		/**
-		 * Show and activate the Voicemeeter window.
-		 */
-		ShowVoicemeeterWindow() {
-			WinShow Voicemeeter.WindowClass
-			WinActivate Voicemeeter.WindowClass
-		}
-
-		/**
-		 * Hide the Voicemeeter window.
-		 */
-		HideVoicemeeterWindow() {
-			WinHide Voicemeeter.WindowClass
-		}
-
-		/**
-		 * Toggles the Voicemeeter window between shown and hidden. If the window is hidden or inactive, shows and activates the window, otherwise hides the window.
-		 */
-		ToggleVoicemeeterWindow() {
-			if WinActive(Voicemeeter.WindowClass) {
-				this.HideVoicemeeterWindow()
-			} else {
-				this.ShowVoicemeeterWindow()
-			}
+	/**
+	 * Toggles the Voicemeeter window between shown and hidden. If the window is hidden or inactive, shows and activates the window, otherwise hides the window.
+	 */
+	ToggleVoicemeeterWindow() {
+		if WinActive(Voicemeeter.WindowClass) {
+			this.HideVoicemeeterWindow()
+		} else {
+			this.ShowVoicemeeterWindow()
 		}
 	}
 }
