@@ -139,11 +139,11 @@ class Voicemeeter {
 
 	static WindowClass => "ahk_class VBCABLE0Voicemeeter0MainWindow0"
 
-		/**
-		 * @type {Voicemeeter.RemoteInterface}
-		 * @private
-		 */
-		_vmr := 0
+	/**
+	 * @type {Voicemeeter.RemoteInterface}
+	 * @private
+	 */
+	_vmr := 0
 
 	/**
 	 * Constructs a new Voicemeeter instance. This loads the Voicemeeter Remote DLL and logs in to the server.
