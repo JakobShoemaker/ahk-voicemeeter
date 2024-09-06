@@ -1,6 +1,6 @@
 ﻿class Voicemeeter {
 	/**
-	 * A class containing helper methods for integral enumerations used by the Voicemeeter Remote SDK.
+	 * A class containing helper methods for integral enumerations used by the Voicemeeter Remote SDK. This class exists to be extended by other classes, and is not intended to be referenced directly.
 	 */
 	class Enum {
 		/**
