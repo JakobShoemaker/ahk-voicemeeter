@@ -70,6 +70,19 @@ class Voicemeeter {
 		static Voicemeeter => 1
 		static VoicemeeterBanana => 2
 		static VoicemeeterPotato => 3
+		static Voicemeeter64 => 4
+		static VoicemeeterBanana64 => 5
+		static VoicemeeterPotato64 => 6
+		static VbDeviceCheck => 10
+		static VoicemeeterMacroButtons => 11
+		static VoicemeeterStreamerView => 12
+		static VoicemeeterBusMatrix8 => 13
+		static VoicemeeterBusGeq15 => 14
+		static Vban2Midi => 15
+		static VbCableControlPanel => 20
+		static VbAuxControlPanel => 21
+		static VbVaio3ControlPanel => 22
+		static VbVaioControlPanel => 23
 	}
 
 	/**
