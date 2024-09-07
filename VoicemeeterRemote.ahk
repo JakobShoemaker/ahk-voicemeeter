@@ -150,6 +150,10 @@ class Voicemeeter {
 		}
 	}
 
+	/**
+	 * The window class of the Voicemeeter main window. This is intended to be used with AutoHotkey [window functions](https://www.autohotkey.com/docs/v2/lib/Win.htm).
+	 * @type {String}
+	 */
 	static WindowClass => "ahk_class VBCABLE0Voicemeeter0MainWindow0"
 
 	/**
