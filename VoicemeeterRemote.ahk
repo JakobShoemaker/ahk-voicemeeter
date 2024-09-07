@@ -1,4 +1,4 @@
-/**
+﻿/**
  * The Voicemeeter Remote interface.
  */
 class Voicemeeter {
@@ -207,23 +207,19 @@ class Voicemeeter {
 	 * @private
 	 */
 	_Login() {
-		result := DllCall(this._vmr.Login)
-		switch result {
-			case 0: ; OK
+		response := DllCall(this._vmr.Login)
+		switch (response) {
+			case 0:
 				return
-
-			case 1: ; OK but Voicemeeter application not launched
+			case 1:
 				return
-
-			case -1: ; Cannot get client (unexpected)
-				throw Error("Unexpected error while calling VBVMR_Login: Cannot get client")
-
-			case -2: ; Unexpected login (logout was expected before)
+			case -1:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this._Login.Name, response)
+			case -2:
 				this._Logout()
 				this._Login()
-
 			default:
-				throw Error("Unexpected error while calling VBVMR_Login")
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this._Login.Name, response)
 		}
 	}
 
@@ -232,9 +228,12 @@ class Voicemeeter {
 	 * @private
 	 */
 	_Logout() {
-		result := DllCall(this._vmr.Logout)
-		if (result != 0) {
-			throw Error("Unexpected error while calling VBVMR_Logout")
+		response := DllCall(this._vmr.Logout)
+		switch (response) {
+			case 0:
+				return
+			default:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this._Logout.Name, response)
 		}
 	}
 
@@ -244,9 +243,16 @@ class Voicemeeter {
 	 */
 	GetVoicemeeterType() {
 		value := Buffer(4)
-		switch DllCall(this._vmr.GetVoicemeeterType, "Ptr", value) {
+		response := DllCall(this._vmr.GetVoicemeeterType, "Ptr", value)
+		switch (response) {
 			case 0:
 				return NumGet(value, "Int")
+			case -1:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.GetVoicemeeterType.Name, response)
+			case -2:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.GetVoicemeeterType.Name, response)
+			default:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.GetVoicemeeterType.Name, response)
 		}
 	}
 
@@ -256,9 +262,16 @@ class Voicemeeter {
 	 */
 	GetVoicemeeterVersion() {
 		value := Buffer(4)
-		switch DllCall(this._vmr.GetVoicemeeterVersion, "Ptr", value) {
+		response := DllCall(this._vmr.GetVoicemeeterVersion, "Ptr", value)
+		switch (response) {
 			case 0:
 				return NumGet(value, "Int")
+			case -1:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.GetVoicemeeterVersion.Name, response)
+			case -2:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.GetVoicemeeterVersion.Name, response)
+			default:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.GetVoicemeeterVersion.Name, response)
 		}
 	}
 
@@ -268,15 +281,15 @@ class Voicemeeter {
 	 */
 	IsParametersDirty() {
 		response := DllCall(this._vmr.IsParametersDirty)
-		switch response {
+		switch (response) {
 			case 0, 1:
 				return response
 			case -1:
-				throw Error("An unexpected error occurred.", this.IsParametersDirty.Name, response)
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.IsParametersDirty.Name, response)
 			case -2:
-				throw Error("Voicemeeter is not running.", this.IsParametersDirty.Name, response)
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.IsParametersDirty.Name, response)
 			default:
-				throw Error("An unknown error occurred.", this.IsParametersDirty.Name, response)
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.IsParametersDirty.Name, response)
 		}
 	}
 
@@ -287,9 +300,20 @@ class Voicemeeter {
 	 */
 	GetParameterFloat(ParamName) {
 		value := Buffer(4)
-		switch DllCall(this._vmr.GetParameterFloat, "AStr", ParamName, "Ptr", value) {
+		response := DllCall(this._vmr.GetParameterFloat, "AStr", ParamName, "Ptr", value)
+		switch (response) {
 			case 0:
 				return NumGet(value, "Float")
+			case -1:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.GetParameterFloat.Name, response)
+			case -2:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.GetParameterFloat.Name, response)
+			case -3:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN_PARAMETER, this.GetParameterFloat.Name, response)
+			case -5:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_STRUCTURE_MISMATCH, this.GetParameterFloat.Name, response)
+			default:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.GetParameterFloat.Name, response)
 		}
 	}
 
@@ -300,9 +324,20 @@ class Voicemeeter {
 	 */
 	GetParameterString(ParamName) {
 		value := Buffer(1024)
-		switch DllCall(this._vmr.GetParameterString, "AStr", ParamName, "Ptr", value) {
+		response := DllCall(this._vmr.GetParameterString, "AStr", ParamName, "Ptr", value)
+		switch (response) {
 			case 0:
 				return StrGet(value, "UTF-16")
+			case -1:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.GetParameterString.Name, response)
+			case -2:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.GetParameterString.Name, response)
+			case -3:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN_PARAMETER, this.GetParameterString.Name, response)
+			case -5:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_STRUCTURE_MISMATCH, this.GetParameterString.Name, response)
+			default:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.GetParameterString.Name, response)
 		}
 	}
 
@@ -312,9 +347,18 @@ class Voicemeeter {
 	 * @param {Float} Value The value to assign to the parameter.
 	 */
 	SetParameterFloat(ParamName, Value) {
-		switch DllCall(this._vmr.SetParameterFloat, "AStr", ParamName, "Float", Value) {
+		response := DllCall(this._vmr.SetParameterFloat, "AStr", ParamName, "Float", Value)
+		switch (response) {
 			case 0:
 				return
+			case -1:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.SetParameterFloat.Name, response)
+			case -2:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.SetParameterFloat.Name, response)
+			case -3:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN_PARAMETER, this.SetParameterFloat.Name, response)
+			default:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.SetParameterFloat.Name, response)
 		}
 	}
 
@@ -324,9 +368,18 @@ class Voicemeeter {
 	 * @param {String} Value The value to assign to the parameter.
 	 */
 	SetParameterString(ParamName, Value) {
-		switch DllCall(this._vmr.SetParameterString, "AStr", ParamName, "Str", Value) {
+		response := DllCall(this._vmr.SetParameterString, "AStr", ParamName, "Str", Value)
+		switch (response) {
 			case 0:
 				return
+			case -1:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.SetParameterString.Name, response)
+			case -2:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.SetParameterString.Name, response)
+			case -3:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN_PARAMETER, this.SetParameterString.Name, response)
+			default:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.SetParameterString.Name, response)
 		}
 	}
 
@@ -335,9 +388,24 @@ class Voicemeeter {
 	 * @param {String} Params A string containing the script.
 	 */
 	SetParameters(Params) {
-		switch DllCall(this._vmr.SetParameters, "Str", Params) {
+		response := DllCall(this._vmr.SetParameters, "Str", Params)
+		switch (response) {
 			case 0:
 				return
+			case -1:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.SetParameters.Name, response)
+			case -2:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.SetParameters.Name, response)
+			case -3:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.SetParameters.Name, response)
+			case -4:
+				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.SetParameters.Name, response)
+			default:
+				if (response > 0) {
+					throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_SCRIPT_ERROR, this.SetParameters.Name, response, Params)
+				} else {
+					throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.SetParameters.Name, response)
+				}
 		}
 	}
 
