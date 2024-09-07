@@ -379,4 +379,80 @@ class Voicemeeter {
 			this.ShowVoicemeeterWindow()
 		}
 	}
+
+	/**
+	 * An error from the Voicemeeter Remote library.
+	 */
+	class RemoteError extends Error {
+		static ERR_NOT_INSTALLED => 1
+		static ERR_UNKNOWN_VTYPE => 2
+		static ERR_UNEXPECTED => 3
+		static ERR_NO_SERVER => 4
+		static ERR_UNKNOWN_PARAMETER => 5
+		static ERR_STRUCTURE_MISMATCH => 6
+		static ERR_NO_LEVEL_AVAILABLE => 7
+		static ERR_OUT_OF_RANGE => 8
+		static ERR_NO_MIDI_DATA => 9
+		static ERR_CANNOT_SEND_MIDI_DATA => 10
+		static ERR_SCRIPT_ERROR => 11
+		static ERR_CALLBACK_ALREADY_REGISTERED => 12
+		static ERR_NO_CALLBACK_REGISTERED => 13
+		static ERR_CALLBACK_ALREADY_UNREGISTERED => 14
+
+		/**
+		 * The error response code provided by the Voicemeeter Remote library.
+		 * @type {Integer}
+		 */
+		Code := 0
+
+		/**
+		 * Creates a new Voicemeeter.RemoteError object.
+		 * @param {Integer} ErrorType The type of error being created, typically one of the ERR_ fields of this class, such as `Voicemeeter.RemoteError.ERR_NO_SERVER`. This is used to determine the message to assign to the error object.
+		 * @param {String} What The source of the error. This is typically the name of a function.
+		 * @param {Integer} [Code] The response code from the Voicemeeter Remote library.
+		 * @param {Any} [Extra] A value relating to the error.
+		 * @protected
+		 */
+		__New(ErrorType, What, Code?, Extra?) {
+			prefix := IsSet(Code) ? "VBVMR (" . Code . "): " : "VBVMR: "
+			message := ""
+
+			switch (ErrorType) {
+				case Voicemeeter.RemoteError.ERR_NOT_INSTALLED:
+					message := "Voicemeeter is not installed."
+				case Voicemeeter.RemoteError.ERR_UNKNOWN_VTYPE:
+					message := "Unknown Voicemeeter type number."
+				case Voicemeeter.RemoteError.ERR_UNEXPECTED:
+					message := "An unexpected error occurred."
+				case Voicemeeter.RemoteError.ERR_NO_SERVER:
+					message := "Server not found."
+				case Voicemeeter.RemoteError.ERR_UNKNOWN_PARAMETER:
+					message := "Unknown parameter."
+				case Voicemeeter.RemoteError.ERR_STRUCTURE_MISMATCH:
+					message := "Structure mismatch."
+				case Voicemeeter.RemoteError.ERR_NO_LEVEL_AVAILABLE:
+					message := "No level available."
+				case Voicemeeter.RemoteError.ERR_OUT_OF_RANGE:
+					message := "Out of range."
+				case Voicemeeter.RemoteError.ERR_NO_MIDI_DATA:
+					message := "No MIDI data."
+				case Voicemeeter.RemoteError.ERR_CANNOT_SEND_MIDI_DATA:
+					message := "Cannot send MIDI data."
+				case Voicemeeter.RemoteError.ERR_SCRIPT_ERROR:
+					if (IsSet(Code)) {
+						message := "Script contains an error on line " . Code . "."
+					} else {
+						message := "Script contains an error."
+					}
+				default:
+					message := "An unknown error occurred."
+			}
+
+			super.__New(prefix . message, What, Extra?)
+
+			if (IsSet(Code)) {
+				this.Code := Code
+			}
+		}
+	}
 }
