@@ -1,4 +1,4 @@
-﻿/**
+/**
  * The Voicemeeter Remote interface.
  */
 class Voicemeeter {
@@ -384,6 +384,7 @@ class Voicemeeter {
 	 * An error from the Voicemeeter Remote library.
 	 */
 	class RemoteError extends Error {
+		static ERR_UNKNOWN => 0
 		static ERR_NOT_INSTALLED => 1
 		static ERR_UNKNOWN_VTYPE => 2
 		static ERR_UNEXPECTED => 3
