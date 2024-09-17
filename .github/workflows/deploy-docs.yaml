@@ -5,6 +5,7 @@ on:
     paths:
       - 'docs/**'
       - 'mkdocs.yaml'
+      - '.github/**'
 permissions:
   contents: write
 jobs:
