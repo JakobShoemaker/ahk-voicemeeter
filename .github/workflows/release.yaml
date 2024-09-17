@@ -8,16 +8,24 @@ permissions:
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      release_tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
-      - uses: googleapis/release-please-action@v4
-        id: release
+      - id: release
+        uses: googleapis/release-please-action@v4
         with:
           release-type: simple
-      - if: ${{ steps.release.outputs.release_created }}
-        run: |
-          mkdir ./dist
-          zip "./dist/$RELEASE_ASSET" LICENSE Voicemeeter.ahk
-          gh release upload ${{ steps.release.outputs.tag_name }} "./dist/$RELEASE_ASSET"
+  release-artifact:
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    env:
+      release_asset: 'Voicemeeter-${{ needs.release-please.outputs.release_tag_name }}.zip'
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir ./dist
+      - run: zip "./dist/$release_asset" LICENSE Voicemeeter.ahk
+      - run: gh release upload ${{ needs.release-please.outputs.release_tag_name }} "./dist/$release_asset"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_ASSET: 'Voicemeeter-${{ steps.release.outputs.tag_name }}.zip'
