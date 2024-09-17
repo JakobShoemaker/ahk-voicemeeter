@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://jakobshoemaker.github.io/ahk-voicemeeter/</loc>
+         <lastmod>2024-09-17</lastmod>
+    </url>
+    <url>
+         <loc>https://jakobshoemaker.github.io/ahk-voicemeeter/api-reference/voicemeeter/</loc>
+         <lastmod>2024-09-17</lastmod>
+    </url>
+    <url>
+         <loc>https://jakobshoemaker.github.io/ahk-voicemeeter/api-reference/voicemeeter/device-type/</loc>
+         <lastmod>2024-09-17</lastmod>
+    </url>
+    <url>
+         <loc>https://jakobshoemaker.github.io/ahk-voicemeeter/api-reference/voicemeeter/enum/</loc>
+         <lastmod>2024-09-17</lastmod>
+    </url>
+    <url>
+         <loc>https://jakobshoemaker.github.io/ahk-voicemeeter/api-reference/voicemeeter/remote-error/</loc>
+         <lastmod>2024-09-17</lastmod>
+    </url>
+    <url>
+         <loc>https://jakobshoemaker.github.io/ahk-voicemeeter/api-reference/voicemeeter/type/</loc>
+         <lastmod>2024-09-17</lastmod>
+    </url>
+</urlset>
