@@ -15,8 +15,9 @@ jobs:
           release-type: simple
       - if: ${{ steps.release.outputs.release_created }}
         run: |
-          zip $RELEASE_ASSET LICENSE Voicemeeter.ahk
-          gh release upload ${{ steps.release.outputs.tag_name }} $RELEASE_ASSET
+          mkdir ./dist
+          zip "./dist/$RELEASE_ASSET" LICENSE Voicemeeter.ahk
+          gh release upload ${{ steps.release.outputs.tag_name }} "./dist/$RELEASE_ASSET"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_ASSET: Voicemeeter${{ steps.release.outputs.tag_name }}
+          RELEASE_ASSET: 'Voicemeeter-${{ steps.release.outputs.tag_name }}.zip'
