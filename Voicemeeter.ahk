@@ -3,7 +3,8 @@
  */
 class Voicemeeter {
 	/**
-	 * A class containing helper methods for integral enumerations used by the Voicemeeter Remote SDK. This class exists to be extended by other classes, and is not intended to be referenced directly.
+	 * A class containing helper methods for integral enumerations used by the Voicemeeter Remote SDK. This class exists
+	 * to be extended by other classes, and is not intended to be referenced directly.
 	 */
 	class Enum {
 		/**
@@ -34,7 +35,8 @@ class Voicemeeter {
 		}
 
 		/**
-		 * Enumerates values of the enumeration. This method is typically not called directly. Instead, the enumeration is passed directly to a {@link https://www.autohotkey.com/docs/v2/lib/For.htm|for-loop}.
+		 * Enumerates values of the enumeration. This method is typically not called directly. Instead, the enumeration
+		 * is passed directly to a {@link https://www.autohotkey.com/docs/v2/lib/For.htm|for-loop}.
 		 * @param {Integer} NumberOfVars The number of variables passed to the calling for-loop.
 		 * @returns {Enumerator} A new {@link https://www.autohotkey.com/docs/v2/lib/Enumerator.htm|enumerator}.
 		 */
@@ -151,7 +153,8 @@ class Voicemeeter {
 	}
 
 	/**
-	 * The window class of the Voicemeeter main window. This is intended to be used with AutoHotkey [window functions](https://www.autohotkey.com/docs/v2/lib/Win.htm).
+	 * The window class of the Voicemeeter main window. This is intended to be used with AutoHotkey
+	 * [window functions](https://www.autohotkey.com/docs/v2/lib/Win.htm).
 	 * @type {String}
 	 */
 	static WindowClass => "ahk_class VBCABLE0Voicemeeter0MainWindow0"
@@ -414,7 +417,8 @@ class Voicemeeter {
 	}
 
 	/**
-	 * Builds a string containing a script from a list of strings containing script statements for {@link Voicemeeter#SetParameters|SetParameters}.
+	 * Builds a string containing a script from a list of strings containing script statements for
+	 * {@link Voicemeeter#SetParameters|SetParameters}.
 	 * @param {...String} Value A string containing a script for {@link Voicemeeter#SetParameters|SetParameters}.
 	 * @returns {String} A string containing each of the provided scripts.
 	 */
@@ -442,7 +446,8 @@ class Voicemeeter {
 	}
 
 	/**
-	 * Toggles the Voicemeeter window between shown and hidden. If the window is hidden or inactive, shows and activates the window, otherwise hides the window.
+	 * Toggles the Voicemeeter window between shown and hidden. If the window is hidden or inactive, shows and activates
+	 * the window, otherwise hides the window.
 	 */
 	ToggleVoicemeeterWindow() {
 		if WinActive(Voicemeeter.WindowClass) {
@@ -480,7 +485,9 @@ class Voicemeeter {
 
 		/**
 		 * Creates a new Voicemeeter.RemoteError object.
-		 * @param {Integer} ErrorType The type of error being created, typically one of the ERR_ fields of this class, such as `Voicemeeter.RemoteError.ERR_NO_SERVER`. This is used to determine the message to assign to the error object.
+		 * @param {Integer} ErrorType The type of error being created, typically one of the ERR_ fields of this class,
+		 * such as `Voicemeeter.RemoteError.ERR_NO_SERVER`. This is used to determine the message to assign to the error
+		 * object.
 		 * @param {String} What The source of the error. This is typically the name of a function.
 		 * @param {Integer} [Code] The response code from the Voicemeeter Remote library.
 		 * @param {Any} [Extra] A value relating to the error.
