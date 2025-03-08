@@ -71,12 +71,12 @@ class Voicemeeter {
 			case 1:
 				return
 			case -1:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this._Login.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNEXPECTED", this._Login.Name, response)
 			case -2:
 				this._Logout()
 				this._Login()
 			default:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this._Login.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN", this._Login.Name, response)
 		}
 	}
 
@@ -90,7 +90,7 @@ class Voicemeeter {
 			case 0:
 				return
 			default:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this._Logout.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN", this._Logout.Name, response)
 		}
 	}
 
@@ -105,11 +105,11 @@ class Voicemeeter {
 			case 0:
 				return NumGet(value, "Int")
 			case -1:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.GetVoicemeeterType.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNEXPECTED", this.GetVoicemeeterType.Name, response)
 			case -2:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.GetVoicemeeterType.Name, response)
+				throw Voicemeeter.RemoteError("ERR_NO_SERVER", this.GetVoicemeeterType.Name, response)
 			default:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.GetVoicemeeterType.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN", this.GetVoicemeeterType.Name, response)
 		}
 	}
 
@@ -124,11 +124,11 @@ class Voicemeeter {
 			case 0:
 				return NumGet(value, "Int")
 			case -1:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.GetVoicemeeterVersion.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNEXPECTED", this.GetVoicemeeterVersion.Name, response)
 			case -2:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.GetVoicemeeterVersion.Name, response)
+				throw Voicemeeter.RemoteError("ERR_NO_SERVER", this.GetVoicemeeterVersion.Name, response)
 			default:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.GetVoicemeeterVersion.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN", this.GetVoicemeeterVersion.Name, response)
 		}
 	}
 
@@ -142,11 +142,11 @@ class Voicemeeter {
 			case 0, 1:
 				return response
 			case -1:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.IsParametersDirty.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNEXPECTED", this.IsParametersDirty.Name, response)
 			case -2:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.IsParametersDirty.Name, response)
+				throw Voicemeeter.RemoteError("ERR_NO_SERVER", this.IsParametersDirty.Name, response)
 			default:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.IsParametersDirty.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN", this.IsParametersDirty.Name, response)
 		}
 	}
 
@@ -162,15 +162,15 @@ class Voicemeeter {
 			case 0:
 				return NumGet(value, "Float")
 			case -1:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.GetParameterFloat.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNEXPECTED", this.GetParameterFloat.Name, response)
 			case -2:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.GetParameterFloat.Name, response)
+				throw Voicemeeter.RemoteError("ERR_NO_SERVER", this.GetParameterFloat.Name, response)
 			case -3:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN_PARAMETER, this.GetParameterFloat.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN_PARAMETER", this.GetParameterFloat.Name, response)
 			case -5:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_STRUCTURE_MISMATCH, this.GetParameterFloat.Name, response)
+				throw Voicemeeter.RemoteError("ERR_STRUCTURE_MISMATCH", this.GetParameterFloat.Name, response)
 			default:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.GetParameterFloat.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN", this.GetParameterFloat.Name, response)
 		}
 	}
 
@@ -186,15 +186,15 @@ class Voicemeeter {
 			case 0:
 				return StrGet(value, "UTF-16")
 			case -1:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.GetParameterString.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNEXPECTED", this.GetParameterString.Name, response)
 			case -2:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.GetParameterString.Name, response)
+				throw Voicemeeter.RemoteError("ERR_NO_SERVER", this.GetParameterString.Name, response)
 			case -3:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN_PARAMETER, this.GetParameterString.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN_PARAMETER", this.GetParameterString.Name, response)
 			case -5:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_STRUCTURE_MISMATCH, this.GetParameterString.Name, response)
+				throw Voicemeeter.RemoteError("ERR_STRUCTURE_MISMATCH", this.GetParameterString.Name, response)
 			default:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.GetParameterString.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN", this.GetParameterString.Name, response)
 		}
 	}
 
@@ -209,13 +209,13 @@ class Voicemeeter {
 			case 0:
 				return
 			case -1:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.SetParameterFloat.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNEXPECTED", this.SetParameterFloat.Name, response)
 			case -2:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.SetParameterFloat.Name, response)
+				throw Voicemeeter.RemoteError("ERR_NO_SERVER", this.SetParameterFloat.Name, response)
 			case -3:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN_PARAMETER, this.SetParameterFloat.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN_PARAMETER", this.SetParameterFloat.Name, response)
 			default:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.SetParameterFloat.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN", this.SetParameterFloat.Name, response)
 		}
 	}
 
@@ -230,13 +230,13 @@ class Voicemeeter {
 			case 0:
 				return
 			case -1:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.SetParameterString.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNEXPECTED", this.SetParameterString.Name, response)
 			case -2:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.SetParameterString.Name, response)
+				throw Voicemeeter.RemoteError("ERR_NO_SERVER", this.SetParameterString.Name, response)
 			case -3:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN_PARAMETER, this.SetParameterString.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN_PARAMETER", this.SetParameterString.Name, response)
 			default:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.SetParameterString.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN", this.SetParameterString.Name, response)
 		}
 	}
 
@@ -250,18 +250,18 @@ class Voicemeeter {
 			case 0:
 				return
 			case -1:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.SetParameters.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNEXPECTED", this.SetParameters.Name, response)
 			case -2:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_NO_SERVER, this.SetParameters.Name, response)
+				throw Voicemeeter.RemoteError("ERR_NO_SERVER", this.SetParameters.Name, response)
 			case -3:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.SetParameters.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNEXPECTED", this.SetParameters.Name, response)
 			case -4:
-				throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNEXPECTED, this.SetParameters.Name, response)
+				throw Voicemeeter.RemoteError("ERR_UNEXPECTED", this.SetParameters.Name, response)
 			default:
 				if (response > 0) {
-					throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_SCRIPT_ERROR, this.SetParameters.Name, response, Params)
+					throw Voicemeeter.RemoteError("ERR_SCRIPT_ERROR", this.SetParameters.Name, response, Params)
 				} else {
-					throw Voicemeeter.RemoteError(Voicemeeter.RemoteError.ERR_UNKNOWN, this.SetParameters.Name, response)
+					throw Voicemeeter.RemoteError("ERR_UNKNOWN", this.SetParameters.Name, response)
 				}
 		}
 	}
@@ -461,22 +461,6 @@ class Voicemeeter {
 	 * An error from the Voicemeeter Remote library.
 	 */
 	class RemoteError extends Error {
-		static ERR_UNKNOWN => 0
-		static ERR_NOT_INSTALLED => 1
-		static ERR_UNKNOWN_VTYPE => 2
-		static ERR_UNEXPECTED => 3
-		static ERR_NO_SERVER => 4
-		static ERR_UNKNOWN_PARAMETER => 5
-		static ERR_STRUCTURE_MISMATCH => 6
-		static ERR_NO_LEVEL_AVAILABLE => 7
-		static ERR_OUT_OF_RANGE => 8
-		static ERR_NO_MIDI_DATA => 9
-		static ERR_CANNOT_SEND_MIDI_DATA => 10
-		static ERR_SCRIPT_ERROR => 11
-		static ERR_CALLBACK_ALREADY_REGISTERED => 12
-		static ERR_NO_CALLBACK_REGISTERED => 13
-		static ERR_CALLBACK_ALREADY_UNREGISTERED => 14
-
 		/**
 		 * The error response code provided by the Voicemeeter Remote library.
 		 * @type {Integer}
@@ -485,9 +469,8 @@ class Voicemeeter {
 
 		/**
 		 * Creates a new Voicemeeter.RemoteError object.
-		 * @param {Integer} ErrorType The type of error being created, typically one of the ERR_ fields of this class,
-		 * such as `Voicemeeter.RemoteError.ERR_NO_SERVER`. This is used to determine the message to assign to the error
-		 * object.
+		 * @param {'ERR_UNKNOWN'|'ERR_NOT_INSTALLED'|'ERR_UNKNOWN_VTYPE'|'ERR_UNEXPECTED'|'ERR_NO_SERVER'|'ERR_UNKNOWN_PARAMETER'|'ERR_STRUCTURE_MISMATCH'|'ERR_NO_LEVEL_AVAILABLE'|'ERR_OUT_OF_RANGE'|'ERR_NO_MIDI_DATA'|'ERR_CANNOT_SEND_MIDI_DATA'|'ERR_SCRIPT_ERROR'} ErrorType
+		 * The type of error being created. This is used to determine the message to assign to the error object.
 		 * @param {String} What The source of the error. This is typically the name of a function.
 		 * @param {Integer} [Code] The response code from the Voicemeeter Remote library.
 		 * @param {Any} [Extra] A value relating to the error.
@@ -498,27 +481,27 @@ class Voicemeeter {
 			message := ""
 
 			switch (ErrorType) {
-				case Voicemeeter.RemoteError.ERR_NOT_INSTALLED:
+				case "ERR_NOT_INSTALLED":
 					message := "Voicemeeter is not installed."
-				case Voicemeeter.RemoteError.ERR_UNKNOWN_VTYPE:
+				case "ERR_UNKNOWN_VTYPE":
 					message := "Unknown Voicemeeter type number."
-				case Voicemeeter.RemoteError.ERR_UNEXPECTED:
+				case "ERR_UNEXPECTED":
 					message := "An unexpected error occurred."
-				case Voicemeeter.RemoteError.ERR_NO_SERVER:
+				case "ERR_NO_SERVER":
 					message := "Server not found."
-				case Voicemeeter.RemoteError.ERR_UNKNOWN_PARAMETER:
+				case "ERR_UNKNOWN_PARAMETER":
 					message := "Unknown parameter."
-				case Voicemeeter.RemoteError.ERR_STRUCTURE_MISMATCH:
+				case "ERR_STRUCTURE_MISMATCH":
 					message := "Structure mismatch."
-				case Voicemeeter.RemoteError.ERR_NO_LEVEL_AVAILABLE:
+				case "ERR_NO_LEVEL_AVAILABLE":
 					message := "No level available."
-				case Voicemeeter.RemoteError.ERR_OUT_OF_RANGE:
+				case "ERR_OUT_OF_RANGE":
 					message := "Out of range."
-				case Voicemeeter.RemoteError.ERR_NO_MIDI_DATA:
+				case "ERR_NO_MIDI_DATA":
 					message := "No MIDI data."
-				case Voicemeeter.RemoteError.ERR_CANNOT_SEND_MIDI_DATA:
+				case "ERR_CANNOT_SEND_MIDI_DATA":
 					message := "Cannot send MIDI data."
-				case Voicemeeter.RemoteError.ERR_SCRIPT_ERROR:
+				case "ERR_SCRIPT_ERROR":
 					if (IsSet(Code)) {
 						message := "Script contains an error on line " . Code . "."
 					} else {
