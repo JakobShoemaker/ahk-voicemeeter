@@ -52,6 +52,102 @@ ParamString := Vmr.BuildParamString(Value1 [, Value2, ..., ValueN])
 
 A string containing each of the provided scripts.
 
+### :material-alpha-m-box: GetInputDeviceCount
+
+Get the number of input devices available on the system.
+
+#### Syntax
+
+```autohotkey
+Value := Vmr.GetInputDeviceCount()
+```
+
+#### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
+
+The number of input devices.
+
+### :material-alpha-m-box: GetInputDeviceDescriptor
+
+Get an input device descriptor.
+
+#### Syntax
+
+```autohotkey
+Value := Vmr.GetInputDeviceDescriptor(Index)
+```
+
+#### Parameters
+
+`Index`: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
+
+:   The zero-based index of the device descriptor.
+
+#### Returns: *[Voicemeeter.DeviceDescriptor](./device-descriptor.md)*
+
+The device descriptor for the given index.
+
+### :material-alpha-m-box: GetInputDeviceDescriptors
+
+Get all input device descriptors.
+
+#### Syntax
+
+```autohotkey
+Value := Vmr.GetInputDeviceDescriptors()
+```
+
+#### Returns: *[Voicemeeter.DeviceDescriptor](./device-descriptor.md)\[\]*
+
+An array containing all input device descriptors.
+
+### :material-alpha-m-box: GetOutputDeviceCount
+
+Get the number of output devices available on the system.
+
+#### Syntax
+
+```autohotkey
+Value := Vmr.GetOutputDeviceCount()
+```
+
+#### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
+
+The number of output devices.
+
+### :material-alpha-m-box: GetOutputDeviceDescriptor
+
+Get an output device descriptor.
+
+#### Syntax
+
+```autohotkey
+Value := Vmr.GetOutputDeviceDescriptor(Index)
+```
+
+#### Parameters
+
+`Index`: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
+
+:   The zero-based index of the device descriptor.
+
+#### Returns: *[Voicemeeter.DeviceDescriptor](./device-descriptor.md)*
+
+The device descriptor for the given index.
+
+### :material-alpha-m-box: GetOutputDeviceDescriptors
+
+Get all output device descriptors.
+
+#### Syntax
+
+```autohotkey
+Value := Vmr.GetOutputDeviceDescriptors()
+```
+
+#### Returns: *[Voicemeeter.DeviceDescriptor](./device-descriptor.md)\[\]*
+
+An array containing all output device descriptors.
+
 ### :material-alpha-m-box: GetParameterFloat
 
 Get a parameter value as a floating point number.

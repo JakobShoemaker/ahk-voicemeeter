@@ -267,6 +267,88 @@ class Voicemeeter {
 	}
 
 	/**
+	 * Get the number of output devices available on the system.
+	 * @returns {Integer} The number of output devices.
+	 */
+	GetOutputDeviceCount() {
+		return DllCall(this._vmr.Output_GetDeviceNumber)
+	}
+
+	/**
+	 * Get an output device descriptor.
+	 * @param {Integer} Index The zero-based index of the device descriptor.
+	 * @returns {Voicemeeter.DeviceDescriptor} The device descriptor for the given index.
+	 */
+	GetOutputDeviceDescriptor(Index) {
+		deviceType := Buffer(4)
+		deviceName := Buffer(512)
+		hardwareId := Buffer(512)
+		response := DllCall(this._vmr.Output_GetDeviceDesc, "Int", Index, "Ptr", deviceType, "Ptr", deviceName, "Ptr", hardwareId)
+		if (response !== 0) {
+			throw Voicemeeter.RemoteError("ERR_UNKNOWN", this.GetOutputDeviceDescriptor.Name, response)
+		}
+		return Voicemeeter.DeviceDescriptor(Index, NumGet(deviceType, "Int"), StrGet(deviceName, "UTF-16"), StrGet(hardwareId, "UTF-16"))
+	}
+
+	/**
+	 * Get all output device descriptors.
+	 * @returns {Voicemeeter.DeviceDescriptor[]} An array containing all output device descriptors.
+	 */
+	GetOutputDeviceDescriptors() {
+		descriptors := []
+		count := this.GetOutputDeviceCount()
+		i := 0
+
+		while (i < count) {
+			descriptors.Push(this.GetOutputDeviceDescriptor(i))
+			++i
+		}
+
+		return descriptors
+	}
+
+	/**
+	 * Get the number of input devices available on the system.
+	 * @returns {Integer} The number of input devices.
+	 */
+	GetInputDeviceCount() {
+		return DllCall(this._vmr.Input_GetDeviceNumber)
+	}
+
+	/**
+	 * Get an input device descriptor.
+	 * @param {Integer} Index The zero-based index of the device descriptor.
+	 * @returns {Voicemeeter.DeviceDescriptor} The device descriptor for the given index.
+	 */
+	GetInputDeviceDescriptor(Index) {
+		deviceType := Buffer(4)
+		deviceName := Buffer(512)
+		hardwareId := Buffer(512)
+		response := DllCall(this._vmr.Input_GetDeviceDesc, "Int", Index, "Ptr", deviceType, "Ptr", deviceName, "Ptr", hardwareId)
+		if (response !== 0) {
+			throw Voicemeeter.RemoteError("ERR_UNKNOWN", this.GetInputDeviceDescriptor.Name, response)
+		}
+		return Voicemeeter.DeviceDescriptor(Index, NumGet(deviceType, "Int"), StrGet(deviceName, "UTF-16"), StrGet(hardwareId, "UTF-16"))
+	}
+
+	/**
+	 * Get all input device descriptors.
+	 * @returns {Voicemeeter.DeviceDescriptor[]} An array containing all input device descriptors.
+	 */
+	GetInputDeviceDescriptors() {
+		descriptors := []
+		count := this.GetInputDeviceCount()
+		i := 0
+
+		while (i < count) {
+			descriptors.Push(this.GetInputDeviceDescriptor(i))
+			++i
+		}
+
+		return descriptors
+	}
+
+	/**
 	 * Builds a string containing a script from a list of strings containing script statements for
 	 * {@link Voicemeeter#SetParameters|SetParameters}.
 	 * @param {...String} Value A string containing a script for {@link Voicemeeter#SetParameters|SetParameters}.
@@ -345,10 +427,10 @@ class Voicemeeter {
 			this.SetParameters := GetProcAddress("VBVMR_SetParametersW")
 
 			; Devices enumerator
-			; this.Output_GetDeviceNumber := GetProcAddress("VBVMR_Output_GetDeviceNumber")
-			; this.Output_GetDeviceDesc := GetProcAddress("VBVMR_Output_GetDeviceDescW")
-			; this.Input_GetDeviceNumber := GetProcAddress("VBVMR_Input_GetDeviceNumber")
-			; this.Input_GetDeviceDesc := GetProcAddress("VBVMR_Input_GetDeviceDescW")
+			this.Output_GetDeviceNumber := GetProcAddress("VBVMR_Output_GetDeviceNumber")
+			this.Output_GetDeviceDesc := GetProcAddress("VBVMR_Output_GetDeviceDescW")
+			this.Input_GetDeviceNumber := GetProcAddress("VBVMR_Input_GetDeviceNumber")
+			this.Input_GetDeviceDesc := GetProcAddress("VBVMR_Input_GetDeviceDescW")
 		}
 
 		/**
@@ -455,6 +537,44 @@ class Voicemeeter {
 		static WDM => 3
 		static KS => 4
 		static ASIO => 5
+	}
+
+	/**
+	 * A descriptor for an audio device.
+	 */
+	class DeviceDescriptor {
+		/**
+		 * Creates a new Voicemeeter.DeviceDescriptor object.
+		 * @param {Integer} Index The zero-based index of the device descriptor.
+		 * @param {Voicemeeter.DeviceType} DeviceType The type of the device.
+		 * @param {String} Name The name of the device.
+		 * @param {String} HardwareId The hardware ID of the device.
+		 */
+		__New(Index, DeviceType, Name, HardwareId) {
+			/**
+			 * The zero-based index of the device descriptor.
+			 * @type {Integer}
+			 */
+			this.Index := Index
+
+			/**
+			 * The type of the device.
+			 * @type {Voicemeeter.DeviceType}
+			 */
+			this.Type := DeviceType
+
+			/**
+			 * The name of the device.
+			 * @type {String}
+			 */
+			this.Name := Name
+
+			/**
+			 * The hardware ID of the device.
+			 * @type {String}
+			 */
+			this.HardwareId := HardwareId
+		}
 	}
 
 	/**
