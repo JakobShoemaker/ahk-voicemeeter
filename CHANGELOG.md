@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/JakobShoemaker/ahk-voicemeeter/compare/v1.0.0...v1.1.0) (2025-09-25)
+
+
+### Features
+
+* add device enumeration methods ([3a34b77](https://github.com/JakobShoemaker/ahk-voicemeeter/commit/3a34b7753b3995c2df95e7dcac386c2201544250))
+
 ## 1.0.0 (2024-09-17)
 
 
