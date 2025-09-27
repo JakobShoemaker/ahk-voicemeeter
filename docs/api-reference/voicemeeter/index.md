@@ -8,6 +8,8 @@ The Voicemeeter Remote interface.
 
 ## Fields
 
+---
+
 ### :material-alpha-f-box: WindowClass
 
 The window class of the Voicemeeter main window. This is intended to be used with AutoHotkey [window functions](https://www.autohotkey.com/docs/v2/lib/Win.htm).
@@ -15,6 +17,8 @@ The window class of the Voicemeeter main window. This is intended to be used wit
 #### Type: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
 
 ## Static Methods
+
+---
 
 ### :material-alpha-m-box: Call
 
@@ -31,6 +35,8 @@ Vmr := Voicemeeter.Call()
 ```
 
 ## Methods
+
+---
 
 ### :material-alpha-m-box: BuildParamString
 
@@ -52,6 +58,8 @@ ParamString := Vmr.BuildParamString(Value1 [, Value2, ..., ValueN])
 
 A string containing each of the provided scripts.
 
+---
+
 ### :material-alpha-m-box: GetInputDeviceCount
 
 Get the number of input devices available on the system.
@@ -65,6 +73,8 @@ Value := Vmr.GetInputDeviceCount()
 #### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
 
 The number of input devices.
+
+---
 
 ### :material-alpha-m-box: GetInputDeviceDescriptor
 
@@ -86,6 +96,8 @@ Value := Vmr.GetInputDeviceDescriptor(Index)
 
 The device descriptor for the given index.
 
+---
+
 ### :material-alpha-m-box: GetInputDeviceDescriptors
 
 Get all input device descriptors.
@@ -100,6 +112,8 @@ Value := Vmr.GetInputDeviceDescriptors()
 
 An array containing all input device descriptors.
 
+---
+
 ### :material-alpha-m-box: GetOutputDeviceCount
 
 Get the number of output devices available on the system.
@@ -113,6 +127,8 @@ Value := Vmr.GetOutputDeviceCount()
 #### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
 
 The number of output devices.
+
+---
 
 ### :material-alpha-m-box: GetOutputDeviceDescriptor
 
@@ -134,6 +150,8 @@ Value := Vmr.GetOutputDeviceDescriptor(Index)
 
 The device descriptor for the given index.
 
+---
+
 ### :material-alpha-m-box: GetOutputDeviceDescriptors
 
 Get all output device descriptors.
@@ -147,6 +165,8 @@ Value := Vmr.GetOutputDeviceDescriptors()
 #### Returns: *[Voicemeeter.DeviceDescriptor](./device-descriptor.md)\[\]*
 
 An array containing all output device descriptors.
+
+---
 
 ### :material-alpha-m-box: GetParameterFloat
 
@@ -168,6 +188,8 @@ Value := Vmr.GetParameterFloat(ParamName)
 
 The value of the parameter.
 
+---
+
 ### :material-alpha-m-box: GetParameterString
 
 Get a parameter value as a string.
@@ -188,6 +210,8 @@ Value := Vmr.GetParameterString(ParamName)
 
 The value of the parameter.
 
+---
+
 ### :material-alpha-m-box: GetVoicemeeterType
 
 Get the Voicemeeter type.
@@ -201,6 +225,8 @@ VoicemeeterType := Vmr.GetVoicemeeterType()
 #### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
 
 An integer representing the type of Voicemeeter.
+
+---
 
 ### :material-alpha-m-box: GetVoicemeeterVersion
 
@@ -216,6 +242,8 @@ Version := Vmr.GetVoicemeeterVersion()
 
 An integer representing the Voicemeeter version.
 
+---
+
 ### :material-alpha-m-box: HideVoicemeeterWindow
 
 Hide the Voicemeeter window.
@@ -225,6 +253,8 @@ Hide the Voicemeeter window.
 ```autohotkey
 Vmr.HideVoicemeeterWindow()
 ```
+
+---
 
 ### :material-alpha-m-box: IsParametersDirty
 
@@ -239,6 +269,8 @@ ParametersChanged := Vmr.IsParametersDirty()
 #### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
 
 1 (true) if parameters have changed, otherwise 0 (false).
+
+---
 
 ### :material-alpha-m-box: SetParameterFloat
 
@@ -260,6 +292,8 @@ Vmr.SetParameterFloat(ParamName, Value)
 
 :   The value to assign to the parameter.
 
+---
+
 ### :material-alpha-m-box: SetParameterString
 
 Set a string parameter value.
@@ -280,6 +314,8 @@ Vmr.SetParameterString()
 
 :   The value to assign to the parameter.
 
+---
+
 ### :material-alpha-m-box: SetParameters
 
 Set one or several parameters by a script.
@@ -296,6 +332,8 @@ Vmr.SetParameters()
 
 :   A string containing the script.
 
+---
+
 ### :material-alpha-m-box: ShowVoicemeeterWindow
 
 Show and activate the Voicemeeter window.
@@ -305,6 +343,8 @@ Show and activate the Voicemeeter window.
 ```autohotkey
 Vmr.ShowVoicemeeterWindow()
 ```
+
+---
 
 ### :material-alpha-m-box: ToggleVoicemeeterWindow
 

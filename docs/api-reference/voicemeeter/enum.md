@@ -8,6 +8,8 @@ A class containing helper methods for integral enumerations used by the Voicemee
 
 ## Static Methods
 
+---
+
 ### :material-alpha-m-box: IsDefined
 
 Determines whether a given integral value, or its name as a string, exists in the enumeration.
@@ -27,6 +29,8 @@ IsDefined := SomeEnum.IsDefined(Value)
 #### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
 
 1 (true) if `Value` is defined in the enumeration, otherwise 0 (false).
+
+---
 
 ### :material-alpha-m-box: __Enum
 

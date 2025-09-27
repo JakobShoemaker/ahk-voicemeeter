@@ -10,6 +10,8 @@ An error from the Voicemeeter Remote library.
 
 ## Properties
 
+---
+
 ### :material-alpha-p-box: Code
 
 The error response code provided by the Voicemeeter Remote library.

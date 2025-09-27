@@ -18,8 +18,9 @@ nav:
 theme:
   name: material
   features:
-    - navigation.sections
+    - navigation.expand
     - navigation.indexes
+    - navigation.sections
   palette:
     - media: "(prefers-color-scheme)"
       toggle:
