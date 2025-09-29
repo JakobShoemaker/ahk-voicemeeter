@@ -34,29 +34,167 @@ Vmr := Voicemeeter()
 Vmr := Voicemeeter.Call()
 ```
 
-## Methods
+## General Information Methods
 
 ---
 
-### :material-alpha-m-box: BuildParamString
+### :material-alpha-m-box: GetVoicemeeterType
 
-Builds a string containing a script from a list of strings containing script statements for [SetParameters](#setparameters).
+Get the Voicemeeter type.
 
 #### Syntax
 
 ```autohotkey
-ParamString := Vmr.BuildParamString(Value1 [, Value2, ..., ValueN])
+VoicemeeterType := Vmr.GetVoicemeeterType()
+```
+
+#### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
+
+An integer representing the type of Voicemeeter.
+
+---
+
+### :material-alpha-m-box: GetVoicemeeterVersion
+
+Get the Voicemeeter version.
+
+#### Syntax
+
+```autohotkey
+Version := Vmr.GetVoicemeeterVersion()
+```
+
+#### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
+
+An integer representing the Voicemeeter version.
+
+## Getter Methods
+
+---
+
+### :material-alpha-m-box: IsParametersDirty
+
+Check if parameters have changed. Call this function periodically (typically every 10 or 20ms).
+
+#### Syntax
+
+```autohotkey
+ParametersChanged := Vmr.IsParametersDirty()
+```
+
+#### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
+
+1 (true) if parameters have changed, otherwise 0 (false).
+
+---
+
+### :material-alpha-m-box: GetParameterFloat
+
+Get a parameter value as a floating point number.
+
+#### Syntax
+
+```autohotkey
+Value := Vmr.GetParameterFloat(ParamName)
 ```
 
 #### Parameters
 
-`Value`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
+`ParamName`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
 
-:   A string containing a script for [SetParameters](#setparameters).
+:   The name of the parameter.
+
+#### Returns: *[Float](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
+
+The value of the parameter.
+
+---
+
+### :material-alpha-m-box: GetParameterString
+
+Get a parameter value as a string.
+
+#### Syntax
+
+```autohotkey
+Value := Vmr.GetParameterString(ParamName)
+```
+
+#### Parameters
+
+`ParamName`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
+
+:   The name of the parameter.
 
 #### Returns: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
 
-A string containing each of the provided scripts.
+The value of the parameter.
+
+## Setter Methods
+
+---
+
+### :material-alpha-m-box: SetParameterFloat
+
+Set a floating point parameter value.
+
+#### Syntax
+
+```autohotkey
+Vmr.SetParameterFloat(ParamName, Value)
+```
+
+#### Parameters
+
+`ParamName`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
+
+:   The name of the parameter.
+
+`Value`: *[Float](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
+
+:   The value to assign to the parameter.
+
+---
+
+### :material-alpha-m-box: SetParameterString
+
+Set a string parameter value.
+
+#### Syntax
+
+```autohotkey
+Vmr.SetParameterString()
+```
+
+#### Parameters
+
+`ParamName`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
+
+:   The name of the parameter.
+
+`Value`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
+
+:   The value to assign to the parameter.
+
+---
+
+### :material-alpha-m-box: SetParameters
+
+Set one or several parameters by a script.
+
+#### Syntax
+
+```autohotkey
+Vmr.SetParameters()
+```
+
+#### Parameters
+
+`Params`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
+
+:   A string containing the script.
+
+## Device Enumerator Methods
 
 ---
 
@@ -166,81 +304,29 @@ Value := Vmr.GetOutputDeviceDescriptors()
 
 An array containing all output device descriptors.
 
+## Utility Methods
+
 ---
 
-### :material-alpha-m-box: GetParameterFloat
+### :material-alpha-m-box: BuildParamString
 
-Get a parameter value as a floating point number.
+Builds a string containing a script from a list of strings containing script statements for [SetParameters](#setparameters).
 
 #### Syntax
 
 ```autohotkey
-Value := Vmr.GetParameterFloat(ParamName)
+ParamString := Vmr.BuildParamString(Value1 [, Value2, ..., ValueN])
 ```
 
 #### Parameters
 
-`ParamName`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
+`Value`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
 
-:   The name of the parameter.
-
-#### Returns: *[Float](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
-
-The value of the parameter.
-
----
-
-### :material-alpha-m-box: GetParameterString
-
-Get a parameter value as a string.
-
-#### Syntax
-
-```autohotkey
-Value := Vmr.GetParameterString(ParamName)
-```
-
-#### Parameters
-
-`ParamName`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
-
-:   The name of the parameter.
+:   A string containing a script for [SetParameters](#setparameters).
 
 #### Returns: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
 
-The value of the parameter.
-
----
-
-### :material-alpha-m-box: GetVoicemeeterType
-
-Get the Voicemeeter type.
-
-#### Syntax
-
-```autohotkey
-VoicemeeterType := Vmr.GetVoicemeeterType()
-```
-
-#### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
-
-An integer representing the type of Voicemeeter.
-
----
-
-### :material-alpha-m-box: GetVoicemeeterVersion
-
-Get the Voicemeeter version.
-
-#### Syntax
-
-```autohotkey
-Version := Vmr.GetVoicemeeterVersion()
-```
-
-#### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
-
-An integer representing the Voicemeeter version.
+A string containing each of the provided scripts.
 
 ---
 
@@ -253,22 +339,6 @@ Hide the Voicemeeter window.
 ```autohotkey
 Vmr.HideVoicemeeterWindow()
 ```
-
----
-
-### :material-alpha-m-box: IsParametersDirty
-
-Check if parameters have changed. Call this function periodically (typically every 10 or 20ms).
-
-#### Syntax
-
-```autohotkey
-ParametersChanged := Vmr.IsParametersDirty()
-```
-
-#### Returns: *[Integer](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
-
-1 (true) if parameters have changed, otherwise 0 (false).
 
 ---
 
@@ -287,68 +357,6 @@ Vmr.RunVoicemeeter(VoicemeeterType)
 `VoicemeeterType`: *[Voicemeeter.Type](./type.md)*
 
 :   The type of Voicemeeter application to run.
-
----
-
-### :material-alpha-m-box: SetParameterFloat
-
-Set a floating point parameter value.
-
-#### Syntax
-
-```autohotkey
-Vmr.SetParameterFloat(ParamName, Value)
-```
-
-#### Parameters
-
-`ParamName`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
-
-:   The name of the parameter.
-
-`Value`: *[Float](https://www.autohotkey.com/docs/v2/Concepts.htm#numbers)*
-
-:   The value to assign to the parameter.
-
----
-
-### :material-alpha-m-box: SetParameterString
-
-Set a string parameter value.
-
-#### Syntax
-
-```autohotkey
-Vmr.SetParameterString()
-```
-
-#### Parameters
-
-`ParamName`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
-
-:   The name of the parameter.
-
-`Value`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
-
-:   The value to assign to the parameter.
-
----
-
-### :material-alpha-m-box: SetParameters
-
-Set one or several parameters by a script.
-
-#### Syntax
-
-```autohotkey
-Vmr.SetParameters()
-```
-
-#### Parameters
-
-`Params`: *[String](https://www.autohotkey.com/docs/v2/Concepts.htm#strings)*
-
-:   A string containing the script.
 
 ---
 
