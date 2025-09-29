@@ -272,6 +272,24 @@ ParametersChanged := Vmr.IsParametersDirty()
 
 ---
 
+### :material-alpha-m-box: RunVoicemeeter
+
+Run the Voicemeeter application.
+
+#### Syntax
+
+```autohotkey
+Vmr.RunVoicemeeter(VoicemeeterType)
+```
+
+#### Parameters
+
+`VoicemeeterType`: *[Voicemeeter.Type](./type.md)*
+
+:   The type of Voicemeeter application to run.
+
+---
+
 ### :material-alpha-m-box: SetParameterFloat
 
 Set a floating point parameter value.

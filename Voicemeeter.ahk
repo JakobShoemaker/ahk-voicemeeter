@@ -95,6 +95,24 @@ class Voicemeeter {
 	}
 
 	/**
+	 * Run the Voicemeeter application.
+	 * @param {Voicemeeter.Type} VoicemeeterType The type of Voicemeeter application to run.
+	 */
+	RunVoicemeeter(VoicemeeterType) {
+		response := DllCall(this._vmr.RunVoicemeeter, "Int", VoicemeeterType)
+		switch (response) {
+			case 0:
+				return
+			case -1:
+				throw Voicemeeter.RemoteError("ERR_NOT_INSTALLED", this.RunVoicemeeter.Name, response)
+			case -2:
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN_VTYPE", this.RunVoicemeeter.Name, response)
+			default:
+				throw Voicemeeter.RemoteError("ERR_UNKNOWN", this.RunVoicemeeter.Name, response)
+		}
+	}
+
+	/**
 	 * Get the Voicemeeter type.
 	 * @returns {Integer} An integer representing the type of Voicemeeter.
 	 */
